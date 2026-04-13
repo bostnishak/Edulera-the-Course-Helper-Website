@@ -163,6 +163,77 @@
             listEl.innerHTML = certs.map(cert => `<div class="settings-section" style="padding:16px">${certRowHTML(cert)}</div>`).join('');
         }
 
+        /* FR-07: Order History */
+        function renderOrders() {
+            const orders = LHData.getOrders(user.id);
+            const listEl = document.getElementById('my-orders-list');
+            if (!listEl) return;
+            if (!orders.length) {
+                listEl.innerHTML = `<div class="settings-section" style="text-align:center;padding:40px">
+                    <div style="font-size:3rem;margin-bottom:12px">🛒</div>
+                    <h3 style="margin-bottom:8px;color:var(--text-secondary)">No orders yet</h3>
+                    <p style="color:var(--text-muted);margin-bottom:20px">Your purchase history will appear here after you buy a course.</p>
+                    <a href="catalog.html" class="btn btn-primary"><i class="fas fa-search"></i> Browse Courses</a></div>`;
+                return;
+            }
+            listEl.innerHTML = orders.map(ord => `
+                <div class="settings-section" style="padding:20px;margin-bottom:16px">
+                    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                        <div style="width:60px;height:48px;border-radius:var(--radius-md);background:${ord.courseGradient};display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">${ord.courseEmoji}</div>
+                        <div style="flex:1;min-width:0">
+                            <div style="font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ord.courseName}</div>
+                            <div style="font-size:.8rem;color:var(--text-muted);margin-top:2px"><i class="fas fa-calendar-alt" style="margin-right:4px"></i>${new Date(ord.date).toLocaleDateString('en-US', { day:'2-digit', month:'short', year:'numeric' })}</div>
+                        </div>
+                        <div style="text-align:right;flex-shrink:0">
+                            <div style="font-weight:800;font-size:1.05rem;color:var(--accent)">$${ord.amount.toFixed(2)}</div>
+                            <span style="font-size:.75rem;background:var(--success-soft);color:var(--success);padding:2px 10px;border-radius:99px;font-weight:600"><i class="fas fa-check-circle"></i> Completed</span>
+                        </div>
+                    </div>
+                    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px">
+                        <a href="player.html?id=${ord.courseId}" class="btn btn-primary btn-sm"><i class="fas fa-play"></i> Go to Course</a>
+                        <span style="font-size:.78rem;color:var(--text-muted);align-self:center">Order ID: ${ord.id}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        /* FR-12: Notifications */
+        function updateNotifBadge() {
+            const count = LHData.getUnreadCount(user.id);
+            const badge = document.getElementById('notif-badge');
+            if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline' : 'none'; }
+        }
+
+        function renderNotifications() {
+            const notifs = LHData.getNotifications(user.id);
+            const listEl = document.getElementById('my-notifications-list');
+            if (!listEl) return;
+            if (!notifs.length) {
+                listEl.innerHTML = `<div class="settings-section" style="text-align:center;padding:40px">
+                    <div style="font-size:3rem;margin-bottom:12px">🔔</div>
+                    <h3 style="margin-bottom:8px;color:var(--text-secondary)">No notifications</h3>
+                    <p style="color:var(--text-muted)">System notifications will appear here.</p></div>`;
+                return;
+            }
+            const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle', warning: 'fa-exclamation-triangle' };
+            const colors = { success: 'var(--success)', error: 'var(--danger,#ef4444)', info: 'var(--accent)', warning: 'var(--warning,#f59e0b)' };
+            listEl.innerHTML = notifs.map(n => `
+                <div class="settings-section" style="padding:16px;margin-bottom:12px;${!n.read ? 'border-left:3px solid var(--accent)' : 'opacity:.8'}">
+                    <div style="display:flex;align-items:flex-start;gap:14px">
+                        <div style="width:40px;height:40px;border-radius:50%;background:${colors[n.type]}22;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <i class="fas ${icons[n.type] || icons.info}" style="color:${colors[n.type]}"></i>
+                        </div>
+                        <div style="flex:1">
+                            <div style="font-weight:700;margin-bottom:2px">${n.title}</div>
+                            <div style="font-size:.85rem;color:var(--text-secondary);margin-bottom:6px">${n.message}</div>
+                            <div style="font-size:.75rem;color:var(--text-muted)">${new Date(n.date).toLocaleString('en-US')}</div>
+                        </div>
+                        ${n.link ? `<a href="${n.link}" class="btn btn-outline btn-sm" style="flex-shrink:0"><i class="fas fa-arrow-right"></i></a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
         function renderEditProfile() {
             const nameInput = document.getElementById('edit-name');
             const emailInput = document.getElementById('edit-email');
@@ -206,6 +277,12 @@
                 if (btn.dataset.tab === 'courses') renderMyCourses();
                 else if (btn.dataset.tab === 'certs') renderMyCerts();
                 else if (btn.dataset.tab === 'edit') renderEditProfile();
+                else if (btn.dataset.tab === 'orders') renderOrders();
+                else if (btn.dataset.tab === 'notifications') {
+                    LHData.markNotificationsRead(user.id);
+                    updateNotifBadge();
+                    renderNotifications();
+                }
             });
         });
 
@@ -299,5 +376,17 @@
         // Initial render
         renderSidebar();
         renderOverview();
+        updateNotifBadge();
+
+        // Mark all notifications read button
+        const markAllBtn = document.getElementById('mark-all-read-btn');
+        if (markAllBtn) {
+            markAllBtn.addEventListener('click', () => {
+                LHData.markNotificationsRead(user.id);
+                updateNotifBadge();
+                renderNotifications();
+                LHData.toast('All notifications marked as read.', 'info');
+            });
+        }
     });
 })();

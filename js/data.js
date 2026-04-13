@@ -361,6 +361,8 @@
         certs: 'lh_certs',
         pending: 'lh_pending_content',
         customCourses: 'lh_custom_courses',
+        orders: 'lh_orders',
+        notifications: 'lh_notifications',
     };
 
     function get(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
@@ -556,6 +558,58 @@
     function qs(id) { return document.getElementById(id); }
     function qsa(sel) { return document.querySelectorAll(sel); }
 
+    /* ---- Orders (FR-07) ---- */
+    function getOrders(userId) {
+        const all = get(K.orders) || {};
+        return (all[userId] || []).sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+    function addOrder(userId, courseId, amount) {
+        const all = get(K.orders) || {};
+        if (!all[userId]) all[userId] = [];
+        const course = getCourse(courseId);
+        const order = {
+            id: 'ord_' + Date.now() + Math.random().toString(36).slice(2, 6),
+            courseId,
+            courseName: course ? course.title : courseId,
+            courseEmoji: course ? course.emoji : '🎓',
+            courseGradient: course ? course.gradient : 'linear-gradient(135deg,#4263eb,#3b82f6)',
+            amount,
+            date: new Date().toISOString(),
+            status: 'completed',
+        };
+        all[userId].unshift(order);
+        set(K.orders, all);
+        return order;
+    }
+
+    /* ---- Notifications (FR-12) ---- */
+    function getNotifications(userId) {
+        const all = get(K.notifications) || {};
+        return (all[userId] || []).sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+    function addNotification(userId, { type, title, message, link }) {
+        const all = get(K.notifications) || {};
+        if (!all[userId]) all[userId] = [];
+        all[userId].unshift({
+            id: 'notif_' + Date.now() + Math.random().toString(36).slice(2, 6),
+            type: type || 'info',
+            title,
+            message,
+            link: link || null,
+            read: false,
+            date: new Date().toISOString(),
+        });
+        set(K.notifications, all);
+    }
+    function markNotificationsRead(userId) {
+        const all = get(K.notifications) || {};
+        if (all[userId]) all[userId].forEach(n => { n.read = true; });
+        set(K.notifications, all);
+    }
+    function getUnreadCount(userId) {
+        return getNotifications(userId).filter(n => !n.read).length;
+    }
+
     window.LHData = {
         getCourses, getAllCourses, getCourse,
         getEnrollments, enroll, isEnrolled,
@@ -563,6 +617,8 @@
         getCerts, addCert, getCert,
         submitContent, getPendingContent, approveContent, rejectContent,
         updateCourse, deleteCourse,
+        getOrders, addOrder,
+        getNotifications, addNotification, markNotificationsRead, getUnreadCount,
         starHTML, toast, qs, qsa,
         CATEGORIES: ['Web Development', 'Data Science', 'Design', 'Marketing']
     };

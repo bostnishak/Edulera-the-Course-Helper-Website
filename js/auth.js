@@ -1,7 +1,21 @@
-﻿/* ============= auth.js — Authentication & Session (Multi-Role) ============= */
+/* ============= auth.js — Authentication & Session (Multi-Role) ============= */
 (function () {
     const USERS_KEY = 'lh_users';
     const SESSION_KEY = 'lh_session';
+
+    /* ---- Version-based full reset ---- */
+    /* Change SEED_VERSION to force-wipe all localStorage and re-seed fresh accounts */
+    const SEED_VERSION = 'v3';
+    if (localStorage.getItem('lh_seed_version') !== SEED_VERSION) {
+        // Clear all Edulera data
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('lh_')) keysToRemove.push(key);
+        }
+        keysToRemove.forEach(k => localStorage.removeItem(k));
+        localStorage.setItem('lh_seed_version', SEED_VERSION);
+    }
 
     function getUsers() { return JSON.parse(localStorage.getItem(USERS_KEY) || '[]'); }
     function saveUsers(u) { localStorage.setItem(USERS_KEY, JSON.stringify(u)); }
@@ -17,32 +31,49 @@
     /* ---- Seed default accounts on first load ---- */
     function seedAccounts() {
         const users = getUsers();
-        const adminExists = users.find(u => u.role === 'admin');
-        const corpExists = users.find(u => u.role === 'corporate');
-        let changed = false;
-        if (!adminExists) {
-            users.push({
-                id: 'admin_001',
-                name: 'Edulera Admin',
-                email: 'admin@Edulera.com',
-                password: 'Admin123!',
-                role: 'admin',
-                createdAt: new Date().toISOString()
-            });
-            changed = true;
-        }
-        if (!corpExists) {
-            users.push({
+
+        /* 3 Demo Hesap — her rol için birer tane hazır */
+        const seedList = [
+            /* 👤 Normal Kullanıcı */
+            {
+                id: 'demo_user_001',
+                name: 'Demo Kullanıcı',
+                email: 'demo@edulera.com',
+                password: 'Demo123!',
+                role: 'user',
+                interests: ['Web Development', 'Design'],
+                bio: 'Edulera demo kullanıcısı',
+                createdAt: '2026-01-01T10:00:00Z'
+            },
+            /* 🏢 Kurumsal Hesap */
+            {
                 id: 'corp_001',
                 name: 'TechCorp Training',
-                email: 'company@techcorp.com',
-                password: 'Company123!',
+                email: 'corp@techcorp.com',
+                password: 'Corp123!',
                 role: 'corporate',
                 companyName: 'TechCorp Inc.',
-                createdAt: new Date().toISOString()
-            });
-            changed = true;
-        }
+                createdAt: '2026-01-01T10:00:00Z'
+            },
+            /* 🛡️ Admin Hesabı */
+            {
+                id: 'admin_001',
+                name: 'Edulera Admin',
+                email: 'admin@edulera.com',
+                password: 'Admin123!',
+                role: 'admin',
+                createdAt: '2026-01-01T10:00:00Z'
+            },
+            /* Extra mock kullanıcılar — FR-09 için admin panelinde görünsün */
+            { id: 'mock_u1', name: 'Ahmet Yilmaz', email: 'ahmet@example.com', password: 'Pass123!', role: 'user', interests: ['Web Development'], bio: 'Frontend developer', createdAt: '2025-11-15T09:00:00Z' },
+            { id: 'mock_u2', name: 'Zeynep Kara',  email: 'zeynep@example.com', password: 'Pass123!', role: 'user', interests: ['Data Science'], bio: 'Data analyst', createdAt: '2025-12-02T14:00:00Z' },
+            { id: 'mock_u3', name: 'Emre Celik',   email: 'emre@example.com',   password: 'Pass123!', role: 'user', interests: ['Marketing'], bio: 'Digital marketer', createdAt: '2026-01-10T11:00:00Z' },
+        ];
+
+        let changed = false;
+        seedList.forEach(s => {
+            if (!users.find(u => u.id === s.id)) { users.push(s); changed = true; }
+        });
         if (changed) saveUsers(users);
     }
 

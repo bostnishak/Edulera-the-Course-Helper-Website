@@ -1,4 +1,4 @@
-/* checkout.js */
+/* checkout.js — FR-05 Add to Cart, FR-06 Mock Payment, FR-07 Order History, FR-12 Notifications, BR-02 Discount */
 (function () {
     document.addEventListener('DOMContentLoaded', function () {
         LHAuth.initNavbar();
@@ -16,13 +16,53 @@
         setText('order-title', course.title);
         setText('order-instructor', course.instructor);
         setText('order-meta', `${course.lessons.length} lessons • ${course.category}`);
-        setText('order-price', '$' + course.price);
         setText('order-old-price', '$' + course.oldPrice);
-        const discount = course.oldPrice - course.price;
-        setText('order-discount', '-$' + discount);
+
+        const baseDiscount = course.oldPrice - course.price;
+        setText('order-discount', '-$' + baseDiscount);
 
         const thumbEl = document.getElementById('order-thumb');
         if (thumbEl) { thumbEl.style.background = course.gradient; thumbEl.textContent = course.emoji; }
+
+        // BR-02: Coupon / Discount calculation — 10% off with code "EDULERA10"
+        let appliedCoupon = false;
+        let finalPrice = course.price;
+
+        function updateFinalPrice() {
+            const priceEl = document.getElementById('order-price');
+            if (priceEl) priceEl.textContent = '$' + finalPrice.toFixed(2);
+        }
+        updateFinalPrice();
+
+        const couponInput = document.getElementById('coupon-input');
+        const couponBtn = document.getElementById('coupon-apply-btn');
+        const couponMsg = document.getElementById('coupon-msg');
+        const couponDiscRow = document.getElementById('coupon-discount-row');
+        const couponDiscEl = document.getElementById('order-coupon-discount');
+
+        if (couponBtn) {
+            couponBtn.addEventListener('click', () => {
+                const code = (couponInput ? couponInput.value : '').trim().toUpperCase();
+                if (code === 'EDULERA10') {
+                    if (appliedCoupon) {
+                        if (couponMsg) { couponMsg.textContent = 'Coupon already applied!'; couponMsg.style.color = 'var(--text-muted)'; }
+                        return;
+                    }
+                    appliedCoupon = true;
+                    const extraDiscount = Math.round(course.price * 0.10 * 100) / 100;
+                    finalPrice = Math.round((course.price - extraDiscount) * 100) / 100;
+                    updateFinalPrice();
+                    if (couponDiscEl) couponDiscEl.textContent = '-$' + extraDiscount.toFixed(2);
+                    if (couponDiscRow) couponDiscRow.style.display = 'flex';
+                    if (couponMsg) { couponMsg.textContent = '✅ 10% discount applied! (EDULERA10)'; couponMsg.style.color = 'var(--success)'; }
+                    LHData.toast('Coupon applied! 10% discount unlocked 🎉', 'success');
+                } else if (code) {
+                    if (couponMsg) { couponMsg.textContent = '❌ Invalid coupon code.'; couponMsg.style.color = 'var(--error,#ef4444)'; }
+                } else {
+                    if (couponMsg) { couponMsg.textContent = 'Please enter a coupon code.'; couponMsg.style.color = 'var(--text-muted)'; }
+                }
+            });
+        }
 
         // Card input formatting
         const cardInput = document.getElementById('card-number');
@@ -51,7 +91,6 @@
         if (form) {
             form.addEventListener('submit', e => {
                 e.preventDefault();
-                // Validate
                 const name = (document.getElementById('card-name').value || '').trim();
                 const card = cardInput ? cardInput.value.replace(/\s/g, '') : '';
                 const expiry = expiryInput ? expiryInput.value : '';
@@ -72,16 +111,28 @@
 
                 // Process payment
                 const btn = document.getElementById('pay-btn');
-                const btnText = document.getElementById('pay-btn-text');
                 if (btn) btn.disabled = true;
-                if (btnText) { btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...'; }
+                if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
                 setTimeout(() => {
+                    // FR-05: Enroll user in course
                     LHData.enroll(user.id, courseId);
-                    // Show success modal
+
+                    // FR-07: Save to order history
+                    LHData.addOrder(user.id, courseId, finalPrice);
+
+                    // FR-12: Create post-purchase notification
+                    LHData.addNotification(user.id, {
+                        type: 'success',
+                        title: 'Payment Successful! 🎉',
+                        message: `You have been enrolled in "${course.title}". Start learning now!`,
+                        link: `player.html?id=${courseId}`
+                    });
+
+                    // FR-06: Show "Payment Successful" modal
                     const modal = document.getElementById('success-modal');
                     if (modal) modal.classList.remove('hidden');
-                    LHData.toast('Payment successful! 🎉', 'success');
+                    LHData.toast('Payment Successful! 🎉', 'success');
 
                     const goCourseBtn = document.getElementById('go-to-course-btn');
                     if (goCourseBtn) {

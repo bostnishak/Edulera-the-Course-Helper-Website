@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -142,8 +142,12 @@
               <span id="order-old-price" style="text-decoration:line-through;color:var(--text-muted)"></span>
             </div>
             <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:.9rem">
-              <span style="color:var(--text-secondary)">Discount</span>
+              <span style="color:var(--text-secondary)">Platform Discount</span>
               <span id="order-discount" style="color:var(--success)"></span>
+            </div>
+            <div id="coupon-discount-row" style="display:none;justify-content:space-between;margin-bottom:8px;font-size:.9rem">
+              <span style="color:var(--success)"><i class="fas fa-tag"></i> Coupon (EDULERA10)</span>
+              <span id="order-coupon-discount" style="color:var(--success)"></span>
             </div>
           </div>
           <div style="display:flex;justify-content:space-between;padding-top:16px;font-weight:700;font-size:1.2rem">
@@ -158,6 +162,15 @@
           </div>
           <div style="margin-top:8px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);font-size:.82rem;color:var(--text-secondary)">
             <i class="fas fa-redo" style="color:var(--text-muted);margin-right:6px"></i>30-day money-back guarantee
+          </div>
+          <!-- BR-02: Coupon Code Section -->
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+            <div style="font-size:.82rem;font-weight:600;margin-bottom:8px;color:var(--text-secondary)"><i class="fas fa-tag"></i> Have a coupon?</div>
+            <div style="display:flex;gap:8px">
+              <input type="text" id="coupon-input" class="form-input" placeholder="e.g. EDULERA10" style="flex:1;font-size:.85rem;padding:8px 12px">
+              <button id="coupon-apply-btn" class="btn btn-outline btn-sm" style="white-space:nowrap">Apply</button>
+            </div>
+            <div id="coupon-msg" style="font-size:.78rem;margin-top:6px"></div>
           </div>
         </div>
       </div>
