@@ -169,6 +169,19 @@
             if (userNav) userNav.classList.remove('hidden');
             if (avatarEl) avatarEl.textContent = (user.name || 'U')[0].toUpperCase();
             if (avatarWrap) avatarWrap.style.background = avatarColor(user.name);
+            // Show standalone wishlist button (now outside nav-user)
+            const wlBtn = document.getElementById('nav-wishlist-btn');
+            if (wlBtn) wlBtn.style.display = '';
+            // Update wishlist count badge
+            try {
+                const wlData = JSON.parse(localStorage.getItem('lh_wishlist') || '{}');
+                const wlCount = (wlData[user.id] || []).length;
+                const wlCountEl = document.getElementById('nav-wishlist-count');
+                if (wlCountEl) {
+                    wlCountEl.textContent = wlCount;
+                    wlCountEl.style.display = wlCount > 0 ? '' : 'none';
+                }
+            } catch (e) {}
         } else {
             if (guestNav) guestNav.classList.remove('hidden');
             if (userNav) userNav.classList.add('hidden');

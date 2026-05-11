@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -37,6 +37,9 @@
                 </button>
                 <button class="panel-nav-item" data-section="users">
                     <i class="fas fa-users"></i><span>Users</span>
+                </button>
+                <button class="panel-nav-item" data-section="security">
+                    <i class="fas fa-shield-alt"></i><span>Security</span>
                 </button>
             </nav>
             <div class="panel-sidebar-footer">
@@ -175,6 +178,97 @@
                             </thead>
                             <tbody id="users-tbody"></tbody>
                         </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECURITY (NFR-03) -->
+            <section class="panel-section" id="section-security">
+                <div class="panel-header">
+                    <h2><i class="fas fa-shield-alt"></i> Data Security Concept</h2>
+                    <p>Security architecture and data protection mechanisms of the Edulera platform.</p>
+                </div>
+
+                <!-- Architecture Layers -->
+                <div class="security-concept-card" style="margin-bottom:24px">
+                    <h3 style="margin-bottom:20px;display:flex;align-items:center;gap:10px">
+                        <span style="width:36px;height:36px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent)"><i class="fas fa-layer-group"></i></span>
+                        Platform Security Architecture
+                    </h3>
+                    <div class="security-layer">
+                        <div class="security-layer-icon" style="background:rgba(13,148,136,0.1)">🔐</div>
+                        <div>
+                            <div class="security-layer-title">Layer 1 — Password Hashing Concept</div>
+                            <div class="security-layer-desc">User passwords are processed through a hash mechanism (conceptual). Plain-text passwords are never stored in production environments. SHA-256 / bcrypt would be applied server-side.</div>
+                        </div>
+                    </div>
+                    <div class="security-layer" style="border-left-color:#d97706">
+                        <div class="security-layer-icon" style="background:rgba(217,119,6,0.1)">🛡️</div>
+                        <div>
+                            <div class="security-layer-title">Layer 2 — Role-Based Access Control (RBAC)</div>
+                            <div class="security-layer-desc">Three roles defined: <strong>User</strong>, <strong>Corporate</strong>, <strong>Admin</strong>. Each role has restricted access to specific pages and API endpoints. Unauthorized access redirects to the appropriate panel.</div>
+                        </div>
+                    </div>
+                    <div class="security-layer" style="border-left-color:#8b5cf6">
+                        <div class="security-layer-icon" style="background:rgba(139,92,246,0.1)">🔒</div>
+                        <div>
+                            <div class="security-layer-title">Layer 3 — Session Management</div>
+                            <div class="security-layer-desc">Sessions are managed via localStorage with unique user IDs. In a production environment, JWT tokens with HttpOnly cookies would be used to prevent XSS attacks.</div>
+                        </div>
+                    </div>
+                    <div class="security-layer" style="border-left-color:#ef4444">
+                        <div class="security-layer-icon" style="background:rgba(239,68,68,0.1)">🌐</div>
+                        <div>
+                            <div class="security-layer-title">Layer 4 — Transport Security (SSL/TLS)</div>
+                            <div class="security-layer-desc">All data transmission in production uses HTTPS with SSL/TLS encryption. The checkout page displays SSL secure badge to users (256-bit encryption).</div>
+                        </div>
+                    </div>
+                    <div class="security-layer" style="border-left-color:#06b6d4">
+                        <div class="security-layer-icon" style="background:rgba(6,182,212,0.1)">📋</div>
+                        <div>
+                            <div class="security-layer-title">Layer 5 — Input Validation</div>
+                            <div class="security-layer-desc">All form inputs are validated both client-side and conceptually server-side. Email format, password strength, and field length constraints are enforced throughout the application.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hash Demo -->
+                <div class="security-concept-card">
+                    <h3 style="margin-bottom:16px;display:flex;align-items:center;gap:10px">
+                        <span style="width:36px;height:36px;border-radius:50%;background:var(--success-soft);display:flex;align-items:center;justify-content:center;color:var(--success)"><i class="fas fa-key"></i></span>
+                        Password Hash Concept Demo
+                    </h3>
+                    <p style="font-size:.9rem;color:var(--text-secondary);margin-bottom:16px">In production, passwords are never stored in plain-text. They are hashed using a one-way algorithm before storage:</p>
+                    <div class="hash-demo">
+                        <div>📥 Input Password: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:var(--text-primary)">"MySecurePass123!"</span></div>
+                        <div>🔄 Hash Algorithm: &nbsp;&nbsp;&nbsp; <span style="color:var(--warning)">bcrypt(password, saltRounds=12)</span></div>
+                        <div>💾 Stored in DB: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:var(--success)">$2b$12$eW5nZmF1dGgxMjM0NTY3OHuK9Lm2NpQrSvTwXyZaBcDeFgHiJkL</span></div>
+                        <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">✅ Original password CANNOT be recovered from hash — one-way function</div>
+                    </div>
+
+                    <!-- Architecture Diagram -->
+                    <h4 style="margin:24px 0 12px">Scalable Architecture Overview (NFR-04)</h4>
+                    <div style="background:var(--bg-secondary);border-radius:var(--radius-lg);padding:20px;font-size:.85rem">
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center">
+                            <div style="background:var(--bg-card);border-radius:var(--radius-md);padding:16px;border:1px solid var(--border)">
+                                <div style="font-size:1.5rem;margin-bottom:8px">🖥️</div>
+                                <strong>Frontend Layer</strong>
+                                <div style="color:var(--text-muted);font-size:.78rem;margin-top:4px">HTML/CSS/JS<br>CDN Static Hosting</div>
+                            </div>
+                            <div style="background:var(--bg-card);border-radius:var(--radius-md);padding:16px;border:1px solid var(--border)">
+                                <div style="font-size:1.5rem;margin-bottom:8px">⚙️</div>
+                                <strong>API Layer</strong>
+                                <div style="color:var(--text-muted);font-size:.78rem;margin-top:4px">Node.js / Express<br>REST APIs + JWT Auth</div>
+                            </div>
+                            <div style="background:var(--bg-card);border-radius:var(--radius-md);padding:16px;border:1px solid var(--border)">
+                                <div style="font-size:1.5rem;margin-bottom:8px">🗄️</div>
+                                <strong>Data Layer</strong>
+                                <div style="color:var(--text-muted);font-size:.78rem;margin-top:4px">PostgreSQL / MongoDB<br>Encrypted at Rest</div>
+                            </div>
+                        </div>
+                        <div style="text-align:center;margin-top:12px;color:var(--text-muted);font-size:.78rem">
+                            <i class="fas fa-arrow-up"></i> All layers communicate over HTTPS/TLS &nbsp;|&nbsp; Auto-scaling via cloud provider &nbsp;|&nbsp; 99.9% uptime SLA
+                        </div>
                     </div>
                 </div>
             </section>

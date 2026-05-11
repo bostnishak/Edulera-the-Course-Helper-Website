@@ -47,6 +47,14 @@
             setText('stat-courses', enrollments.length);
             setText('stat-certs', certs.length);
             setText('stat-completed', completedLessons);
+
+            // Nav wishlist badge
+            const wlCount = LHData.getWishlist(user.id).length;
+            const navBadge = document.getElementById('nav-wishlist-count');
+            if (navBadge) {
+                navBadge.textContent = wlCount;
+                navBadge.classList.toggle('show', wlCount > 0);
+            }
         }
 
         function renderOverview() {
@@ -204,6 +212,101 @@
             if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline' : 'none'; }
         }
 
+        /* FR-13: Wishlist badge */
+        function updateWishlistBadge() {
+            const count = LHData.getWishlist(user.id).length;
+            const badge = document.getElementById('wishlist-badge');
+            if (badge) { badge.textContent = count; badge.style.display = count > 0 ? 'inline' : 'none'; }
+        }
+
+        /* FR-13: Wishlist */
+        function renderWishlist() {
+            const wishlistIds = LHData.getWishlist(user.id);
+            const listEl = document.getElementById('my-wishlist-list');
+            if (!listEl) return;
+            if (!wishlistIds.length) {
+                listEl.innerHTML = `<div class="settings-section" style="text-align:center;padding:48px">
+                    <div style="font-size:3rem;margin-bottom:12px;opacity:.4">💔</div>
+                    <h3 style="margin-bottom:8px;color:var(--text-secondary)">No courses in wishlist</h3>
+                    <p style="color:var(--text-muted);margin-bottom:20px">Browse courses and add your favorites!</p>
+                    <a href="catalog.html" class="btn btn-primary"><i class="fas fa-search"></i> Browse Courses</a>
+                </div>`;
+                return;
+            }
+            listEl.innerHTML = '<div class="wishlist-grid">' + wishlistIds.map(cid => {
+                const c = LHData.getCourse(cid);
+                if (!c) return '';
+                const enrolled = LHData.isEnrolled(user.id, cid);
+                return `<div class="card course-card" style="position:relative">
+                    <div class="course-card-thumb" onclick="location.href='course-detail.html?id=${cid}'" style="cursor:pointer">
+                        <div class="course-card-thumb-grad" style="background:${c.gradient}">${c.emoji}</div>
+                        <span class="course-card-badge">${c.category}</span>
+                    </div>
+                    <div class="course-card-body">
+                        <div class="course-card-title" style="cursor:pointer" onclick="location.href='course-detail.html?id=${cid}'">${c.title}</div>
+                        <div class="course-card-instructor"><i class="fas fa-user-tie" style="opacity:.6;margin-right:4px"></i>${c.instructor}</div>
+                        <div class="rating-row mt-2">
+                            <span class="stars">${LHData.starHTML(c.rating)}</span>
+                            <span class="rating-val">${c.rating}</span>
+                        </div>
+                        <div class="course-card-footer">
+                            <div class="course-card-price"><span class="old-price">$${c.oldPrice}</span>$${c.price}</div>
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:12px">
+                            ${enrolled
+                                ? `<a href="player.html?id=${cid}" class="btn btn-success btn-sm flex-1"><i class="fas fa-play"></i> Go to Course</a>`
+                                : `<a href="course-detail.html?id=${cid}" class="btn btn-primary btn-sm flex-1"><i class="fas fa-shopping-cart"></i> Buy Now</a>`
+                            }
+                            <button class="btn btn-ghost btn-sm" style="color:#ef4444;border:1px solid rgba(239,68,68,.3)" onclick="_removeFromWishlist('${cid}',this)"><i class="fas fa-heart-broken"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('') + '</div>';
+
+            // Inline remove handler
+            window._removeFromWishlist = function(courseId, btn) {
+                LHData.removeFromWishlist(user.id, courseId);
+                updateWishlistBadge();
+                renderWishlist();
+                LHData.toast('Removed from Wishlist', 'info');
+            };
+        }
+
+        /* FR-15: Recommendations */
+        function renderRecommendations() {
+            const recsEl = document.getElementById('my-recs-grid');
+            if (!recsEl) return;
+            const recs = LHData.getRecommendations(user.id);
+            if (!recs.length) {
+                recsEl.innerHTML = `<div style="text-align:center;padding:48px;color:var(--text-muted);grid-column:1/-1">
+                    <div style="font-size:3rem;margin-bottom:12px;opacity:.4">🔮</div>
+                    <h3 style="margin-bottom:8px">No recommendations yet</h3>
+                    <p>Enroll in a course or add interests to get personalized recommendations.</p>
+                    <a href="catalog.html" class="btn btn-primary" style="margin-top:16px">Browse Courses</a>
+                </div>`;
+                return;
+            }
+            recsEl.innerHTML = recs.map(c => `
+                <div class="card course-card" onclick="location.href='course-detail.html?id=${c.id}'" style="cursor:pointer;position:relative">
+                    <div class="course-card-thumb">
+                        <div class="course-card-thumb-grad" style="background:${c.gradient}">${c.emoji}</div>
+                        <span class="course-card-badge">${c.category}</span>
+                    </div>
+                    <div class="course-card-body">
+                        <div class="course-card-cat">${c.category}</div>
+                        <div class="course-card-title">${c.title}</div>
+                        <div class="course-card-instructor"><i class="fas fa-user-tie" style="opacity:.6;margin-right:4px"></i>${c.instructor}</div>
+                        <div class="rating-row mt-2">
+                            <span class="stars">${LHData.starHTML(c.rating)}</span>
+                            <span class="rating-val">${c.rating}</span>
+                        </div>
+                        <div class="course-card-footer">
+                            <div class="course-card-price"><span class="old-price">$${c.oldPrice}</span>$${c.price}</div>
+                        </div>
+                        ${c._reason ? `<div class="rec-reason-tag"><i class="fas fa-magic"></i> ${c._reason}</div>` : ''}
+                    </div>
+                </div>`).join('');
+        }
         function renderNotifications() {
             const notifs = LHData.getNotifications(user.id);
             const listEl = document.getElementById('my-notifications-list');
@@ -278,6 +381,8 @@
                 else if (btn.dataset.tab === 'certs') renderMyCerts();
                 else if (btn.dataset.tab === 'edit') renderEditProfile();
                 else if (btn.dataset.tab === 'orders') renderOrders();
+                else if (btn.dataset.tab === 'wishlist') { renderWishlist(); }
+                else if (btn.dataset.tab === 'recs') { renderRecommendations(); }
                 else if (btn.dataset.tab === 'notifications') {
                     LHData.markNotificationsRead(user.id);
                     updateNotifBadge();
@@ -364,19 +469,13 @@
             if (btn) btn.addEventListener('click', () => { LHAuth.logout(); location.href = 'index.html'; });
         });
 
-        // Check URL hash for direct tab navigation
-        const hash = location.hash.replace('#', '');
-        if (hash) {
-            const tabBtn = document.querySelector(`.sidebar-nav-link[data-tab="${hash}"]`);
-            if (tabBtn) tabBtn.click();
-        }
-
         function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
 
         // Initial render
         renderSidebar();
         renderOverview();
         updateNotifBadge();
+        updateWishlistBadge();
 
         // Mark all notifications read button
         const markAllBtn = document.getElementById('mark-all-read-btn');
@@ -388,5 +487,21 @@
                 LHData.toast('All notifications marked as read.', 'info');
             });
         }
+
+        // Hash-based direct tab navigation (supports #wishlist, #recs, #notifications etc.)
+        function navigateToHash() {
+            const hash = location.hash.replace('#', '').trim();
+            if (!hash) return;
+            const tabBtn = document.querySelector(`.sidebar-nav-link[data-tab="${hash}"]`);
+            if (tabBtn) {
+                tabBtn.click();
+                // Scroll sidebar link into view on mobile
+                tabBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+        // Run on load (after render)
+        setTimeout(navigateToHash, 50);
+        // Run on browser back/forward or anchor change
+        window.addEventListener('hashchange', navigateToHash);
     });
 })();

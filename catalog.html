@@ -23,13 +23,18 @@
             <div class="navbar-links" id="navbar-links"><a href="index.html">Home</a><a href="catalog.html"
                     class="active">Courses</a><a href="profile.html">My Profile</a></div>
             <div class="navbar-actions">
-                <button class="theme-toggle" data-theme-toggle><span class="theme-toggle-icon">🌙</span></button>
+                <button class="nav-wishlist-btn" id="nav-wishlist-btn" title="My Wishlist" onclick="location.href='profile.html#wishlist'" style="display:none">
+                        <i class="fas fa-heart"></i>
+                        <span class="nav-wishlist-count" id="nav-wishlist-count">0</span>
+                    </button>
+                 data-theme-toggle><span class="theme-toggle-icon">🌙</span></button>
                 <div id="nav-guest" class="flex gap-2"><a href="login.html" class="btn btn-ghost btn-sm">Sign In</a><a
                         href="register.html" class="btn btn-primary btn-sm">Sign Up</a></div>
                 <div id="nav-user" class="hidden relative">
                     <div class="navbar-avatar" id="nav-avatar-wrap"><span id="nav-avatar-text">U</span></div>
                     <div class="navbar-dropdown" id="nav-dropdown"><a href="profile.html"><i class="fas fa-user"></i>
                             My Profile</a><a href="profile.html"><i class="fas fa-award"></i> My Certificates</a>
+                        <a href="profile.html#wishlist"><i class="fas fa-heart"></i> My Wishlist</a>
                         <hr><button id="nav-logout"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
                     </div>
                 </div>
@@ -51,6 +56,9 @@
             <div class="input-icon-wrap flex-1"><i class="fas fa-search input-icon"></i><input class="form-input"
                     type="text" id="search-input" placeholder="Search courses..."></div>
         </div>
+        <div style="margin-bottom:16px;display:flex;align-items:center;gap:8px;min-height:24px">
+            <span id="search-speed-badge" class="search-speed-badge"></span>
+        </div>
         <!-- rec tip -->
         <div id="rec-section" class="hidden mb-6">
             <div
@@ -63,6 +71,11 @@
         <div class="catalog-layout">
             <!-- sidebar -->
             <aside class="catalog-sidebar">
+                <button class="catalog-sidebar-toggle" id="sidebar-toggle-btn">
+                    <span><i class="fas fa-sliders-h" style="margin-right:8px"></i>Filters</span>
+                    <span class="toggle-icon">▲</span>
+                </button>
+                <div class="catalog-sidebar-body" id="catalog-sidebar-body">
                 <div class="card">
                     <div class="sidebar-section">
                         <div class="sidebar-title">Category</div>
@@ -85,11 +98,12 @@
                                 id="price-val">$500</span></div>
                     </div>
                 </div>
+                </div><!-- /catalog-sidebar-body -->
             </aside>
             <!-- main -->
             <main>
                 <div class="catalog-toolbar">
-                    <span id="courses-count" style="font-size:.875rem;color:var(--text-muted)">12 courses found</span>
+                    <span id="courses-count" style="font-size:.875rem;color:var(--text-muted)">Loading...</span>
                     <select class="sort-select" id="sort-select">
                         <option value="popular">Most Popular</option>
                         <option value="rating">Highest Rated</option>

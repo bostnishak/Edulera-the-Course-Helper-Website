@@ -363,6 +363,7 @@
         customCourses: 'lh_custom_courses',
         orders: 'lh_orders',
         notifications: 'lh_notifications',
+        wishlist: 'lh_wishlist',
     };
 
     function get(key) { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch (e) { return null; } }
@@ -377,7 +378,12 @@
     }
 
     function getCourse(id) {
-        return getAllCourses().find(c => c.id === id) || null;
+        const c = getAllCourses().find(c => c.id === id) || null;
+        if (c && !c.level) {
+            // Derive level from price as a sensible default
+            c.level = c.price >= 450 ? 'Advanced' : c.price >= 350 ? 'Intermediate' : 'Beginner';
+        }
+        return c;
     }
 
     /* ---- Corporate content submission ---- */
@@ -439,9 +445,19 @@
             });
             set(K.customCourses, custom);
         }
+        /* Also notify the corporate user */
+        const users = JSON.parse(localStorage.getItem('lh_users') || '[]');
+        const corpUser = users.find(u => u.role === 'corporate' && (u.companyName === item.corporateName || u.name === item.corporateName));
+        if (corpUser) {
+            addNotification(corpUser.id, {
+                type: 'success',
+                title: '✅ Content Approved',
+                message: `Your course "${item.title}" has been approved and is now live in the catalog!`,
+                link: 'catalog.html'
+            });
+        }
         return true;
     }
-
     function rejectContent(id, reason) {
         const all = get(K.pending) || [];
         const idx = all.findIndex(p => p.id === id);
@@ -450,6 +466,18 @@
         all[idx].rejectReason = reason || '';
         all[idx].rejectedAt = new Date().toISOString();
         set(K.pending, all);
+        /* Notify corporate user */
+        const item = all[idx];
+        const users = JSON.parse(localStorage.getItem('lh_users') || '[]');
+        const corpUser = users.find(u => u.role === 'corporate' && (u.companyName === item.corporateName || u.name === item.corporateName));
+        if (corpUser) {
+            addNotification(corpUser.id, {
+                type: 'error',
+                title: '❌ Content Rejected',
+                message: `Your course "${item.title}" was rejected.${reason ? ' Reason: ' + reason : ''}`,
+                link: 'corporate.html'
+            });
+        }
         return true;
     }
 
@@ -516,10 +544,14 @@
         return all.filter(c => c.userId === userId);
     }
     function addCert(cert) {
-        const all = get(K.certs) || [];
-        // avoid duplicates
+        let all = get(K.certs) || [];
+        // Avoid exact duplicates (same user, course, type)
         const exists = all.find(c => c.userId === cert.userId && c.courseId === cert.courseId && c.type === cert.type);
         if (exists) return exists;
+        // Rule: achievement replaces participation (not both simultaneously)
+        if (cert.type === 'achievement') {
+            all = all.filter(c => !(c.userId === cert.userId && c.courseId === cert.courseId && c.type === 'participation'));
+        }
         const newCert = { ...cert, id: 'cert_' + Date.now(), date: new Date().toISOString() };
         all.push(newCert);
         set(K.certs, all);
@@ -610,6 +642,87 @@
         return getNotifications(userId).filter(n => !n.read).length;
     }
 
+    /* ---- Wishlist (FR-13) ---- */
+    function getWishlist(userId) {
+        const all = get(K.wishlist) || {};
+        return all[userId] || [];
+    }
+    function addToWishlist(userId, courseId) {
+        const all = get(K.wishlist) || {};
+        if (!all[userId]) all[userId] = [];
+        if (!all[userId].includes(courseId)) all[userId].push(courseId);
+        set(K.wishlist, all);
+    }
+    function removeFromWishlist(userId, courseId) {
+        const all = get(K.wishlist) || {};
+        if (!all[userId]) return;
+        all[userId] = all[userId].filter(id => id !== courseId);
+        set(K.wishlist, all);
+    }
+    function isWishlisted(userId, courseId) {
+        return getWishlist(userId).includes(courseId);
+    }
+    function toggleWishlist(userId, courseId) {
+        if (isWishlisted(userId, courseId)) {
+            removeFromWishlist(userId, courseId);
+            return false;
+        } else {
+            addToWishlist(userId, courseId);
+            return true;
+        }
+    }
+
+    /* ---- Recommendations (FR-15) — Akıllı Öneri Algoritması ---- */
+    function getRecommendations(userId) {
+        const allCourses = getAllCourses();
+        if (!userId) {
+            return [...allCourses].sort((a, b) => b.rating - a.rating).slice(0, 6);
+        }
+        const users = (get(K.users) || []);
+        const user = users.find(u => u.id === userId);
+        const enrolledIds = getEnrollments(userId);
+        const wishlistIds = getWishlist(userId);
+
+        // Category scoring: enrolled=3pts, wishlist=2pts, interests=1pt, progress bonus=1pt
+        const catScore = {};
+        const addScore = (cat, pts) => { catScore[cat] = (catScore[cat] || 0) + pts; };
+
+        enrolledIds.forEach(cid => {
+            const c = getCourse(cid);
+            if (c) {
+                addScore(c.category, 3);
+                const prog = getProgress(userId, cid);
+                if (prog && prog.completedLessons.length > 0) addScore(c.category, 1);
+            }
+        });
+        wishlistIds.forEach(cid => {
+            const c = getCourse(cid);
+            if (c) addScore(c.category, 2);
+        });
+        ((user && user.interests) || []).forEach(cat => addScore(cat, 1));
+
+        const topCats = Object.entries(catScore).sort((a, b) => b[1] - a[1]).map(e => e[0]);
+        const notEnrolled = allCourses.filter(c => !enrolledIds.includes(c.id));
+
+        if (!topCats.length) {
+            return [...notEnrolled].sort((a, b) => b.students - a.students).slice(0, 6);
+        }
+
+        const recs = [];
+        topCats.forEach(cat => {
+            const inCat = notEnrolled.filter(c => c.category === cat && !recs.find(r => r.id === c.id));
+            inCat.sort((a, b) => b.rating - a.rating);
+            inCat.slice(0, 2).forEach(c => recs.push({ ...c, _reason: `Based on your interest in ${cat}` }));
+        });
+        notEnrolled
+            .filter(c => !recs.find(r => r.id === c.id))
+            .sort((a, b) => b.students - a.students)
+            .slice(0, Math.max(0, 6 - recs.length))
+            .forEach(c => recs.push({ ...c, _reason: 'Popular on Edulera' }));
+
+        return recs.slice(0, 6);
+    }
+
     window.LHData = {
         getCourses, getAllCourses, getCourse,
         getEnrollments, enroll, isEnrolled,
@@ -619,7 +732,10 @@
         updateCourse, deleteCourse,
         getOrders, addOrder,
         getNotifications, addNotification, markNotificationsRead, getUnreadCount,
+        getWishlist, addToWishlist, removeFromWishlist, isWishlisted, toggleWishlist,
+        getRecommendations,
         starHTML, toast, qs, qsa,
         CATEGORIES: ['Web Development', 'Data Science', 'Design', 'Marketing']
     };
 })();
+

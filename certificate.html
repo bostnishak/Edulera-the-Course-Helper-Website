@@ -63,7 +63,11 @@
                 <a href="profile.html">My Profile</a>
             </div>
             <div class="navbar-actions">
-                <button class="theme-toggle" data-theme-toggle title="Toggle theme"><span
+                <button class="nav-wishlist-btn" id="nav-wishlist-btn" title="My Wishlist" onclick="location.href='profile.html#wishlist'" style="display:none">
+                        <i class="fas fa-heart"></i>
+                        <span class="nav-wishlist-count" id="nav-wishlist-count">0</span>
+                    </button>
+                 data-theme-toggle title="Toggle theme"><span
                         class="theme-toggle-icon">🌙</span></button>
                 <div id="nav-guest" class="flex gap-2">
                     <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
@@ -183,3 +187,4 @@
 </body>
 
 </html>
+

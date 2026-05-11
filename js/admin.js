@@ -35,6 +35,7 @@
                 if (btn.dataset.section === 'approval') renderApproval();
                 if (btn.dataset.section === 'courses') renderCourses();
                 if (btn.dataset.section === 'users') renderUsers();
+                if (btn.dataset.section === 'security') { /* static HTML — no render needed */ }
             });
         });
 

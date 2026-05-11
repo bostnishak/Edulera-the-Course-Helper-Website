@@ -21,13 +21,18 @@
             <div class="navbar-links" id="navbar-links"><a href="index.html">Home</a><a href="catalog.html"
                     class="active">Courses</a><a href="profile.html">My Profile</a></div>
             <div class="navbar-actions">
-                <button class="theme-toggle" data-theme-toggle><span class="theme-toggle-icon">🌙</span></button>
+                <button class="nav-wishlist-btn" id="nav-wishlist-btn" title="My Wishlist" onclick="location.href='profile.html#wishlist'" style="display:none">
+                        <i class="fas fa-heart"></i>
+                        <span class="nav-wishlist-count" id="nav-wishlist-count">0</span>
+                    </button>
+                 data-theme-toggle><span class="theme-toggle-icon">🌙</span></button>
                 <div id="nav-guest" class="flex gap-2"><a href="login.html" class="btn btn-ghost btn-sm">Sign In</a><a
                         href="register.html" class="btn btn-primary btn-sm">Sign Up</a></div>
                 <div id="nav-user" class="hidden relative">
                     <div class="navbar-avatar" id="nav-avatar-wrap"><span id="nav-avatar-text">U</span></div>
                     <div class="navbar-dropdown" id="nav-dropdown"><a href="profile.html"><i class="fas fa-user"></i>
                             My Profile</a><a href="profile.html"><i class="fas fa-award"></i> My Certificates</a>
+                        <a href="profile.html#wishlist"><i class="fas fa-heart"></i> My Wishlist</a>
                         <hr><button id="nav-logout"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
                     </div>
                 </div>
@@ -51,6 +56,14 @@
                         <span><i class="fas fa-user-tie"></i> <span id="detail-instructor"></span></span>
                         <span><i class="fas fa-users"></i> <span id="detail-students"></span></span>
                         <span><i class="fas fa-book"></i> <span id="detail-lessons-count"></span></span>
+                        <span id="detail-level-badge" style="display:none"><i class="fas fa-signal"></i> <span id="detail-level"></span></span>
+                    </div>
+                    <!-- FR-10: Stock / availability indicator -->
+                    <div style="display:flex;align-items:center;gap:10px;margin-top:14px;flex-wrap:wrap">
+                        <span id="detail-stock-badge" style="display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;padding:4px 12px;border-radius:99px;background:rgba(16,185,129,.12);color:#10b981;border:1px solid rgba(16,185,129,.3)">
+                            <i class="fas fa-check-circle"></i> In Stock — Available
+                        </span>
+                        <span style="font-size:.8rem;color:var(--text-muted)"><i class="fas fa-globe"></i> Online · Self-paced</span>
                     </div>
                 </div>
                 <!-- buy card -->
@@ -66,12 +79,18 @@
                                     class="fas fa-shopping-cart"></i> Buy Now</button>
                             <button class="btn btn-success w-full btn-lg mb-3 hidden" id="go-btn"><i
                                     class="fas fa-play-circle"></i> Go to Course</button>
-                            <div class="text-xs text-center" style="color:var(--text-muted)"><i
-                                    class="fas fa-shield-alt"></i> 30-day money-back guarantee</div>
-                            <div class="text-xs text-center mt-2" style="color:var(--text-muted)"><i
-                                    class="fas fa-infinity"></i> Lifetime access</div>
-                            <div class="text-xs text-center mt-2" style="color:var(--text-muted)"><i
-                                    class="fas fa-certificate"></i> Certificate included</div>
+                            <button class="btn btn-outline w-full mb-3" id="wishlist-detail-btn" style="color:var(--text-secondary)"><i class="far fa-heart" id="wishlist-detail-icon"></i> <span id="wishlist-detail-text">Add to Wishlist</span></button>
+                            <!-- BR-01: 14-Day Return Policy -->
+                            <div class="return-policy-card">
+                                <div class="return-policy-icon"><i class="fas fa-undo-alt"></i></div>
+                                <div>
+                                    <div class="return-policy-title">14-Day Return Policy</div>
+                                    <div class="return-policy-desc">Not satisfied? Request a full refund within 14 days of purchase — no questions asked.</div>
+                                </div>
+                            </div>
+                            <div class="text-xs text-center mt-3" style="color:var(--text-muted)"><i class="fas fa-infinity"></i> Lifetime access</div>
+                            <div class="text-xs text-center mt-2" style="color:var(--text-muted)"><i class="fas fa-certificate"></i> Certificate included</div>
+                            <div class="text-xs text-center mt-2" style="color:var(--text-muted)"><i class="fas fa-lock"></i> Secure SSL checkout</div>
                         </div>
                     </div>
                 </div>

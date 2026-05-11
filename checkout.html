@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -18,7 +18,11 @@
       <a href="catalog.html">Courses</a>
     </div>
     <div class="navbar-actions">
-      <button class="theme-toggle" data-theme-toggle title="Toggle theme"><span class="theme-toggle-icon">🌙</span></button>
+      <button class="nav-wishlist-btn" id="nav-wishlist-btn" title="My Wishlist" onclick="location.href='profile.html#wishlist'" style="display:none">
+                        <i class="fas fa-heart"></i>
+                        <span class="nav-wishlist-count" id="nav-wishlist-count">0</span>
+                    </button>
+                 data-theme-toggle title="Toggle theme"><span class="theme-toggle-icon">🌙</span></button>
       <div id="nav-guest" class="flex gap-2">
         <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
         <a href="register.html" class="btn btn-primary btn-sm">Sign Up</a>
@@ -160,9 +164,15 @@
           <div style="margin-top:8px;padding:12px;background:var(--success-soft);border-radius:var(--radius-md);font-size:.82rem;color:var(--text-secondary)">
             <i class="fas fa-award" style="color:var(--success);margin-right:6px"></i>Certificate of completion included
           </div>
-          <div style="margin-top:8px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);font-size:.82rem;color:var(--text-secondary)">
-            <i class="fas fa-redo" style="color:var(--text-muted);margin-right:6px"></i>30-day money-back guarantee
+          <!-- BR-01: 14-Day Return Policy -->
+          <div class="return-policy-card" style="margin-top:8px">
+            <div class="return-policy-icon"><i class="fas fa-undo-alt"></i></div>
+            <div>
+              <div class="return-policy-title">14-Day Return Policy</div>
+              <div class="return-policy-desc">Not satisfied within 14 days of purchase? Request a full refund — no questions asked.</div>
+            </div>
           </div>
+
           <!-- BR-02: Coupon Code Section -->
           <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
             <div style="font-size:.82rem;font-weight:600;margin-bottom:8px;color:var(--text-secondary)"><i class="fas fa-tag"></i> Have a coupon?</div>
@@ -203,3 +213,5 @@
 <script src="js/checkout.js"></script>
 </body>
 </html>
+
+

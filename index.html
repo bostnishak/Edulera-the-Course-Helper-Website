@@ -27,7 +27,11 @@
         <a href="profile.html">My Profile</a>
       </div>
       <div class="navbar-actions">
-        <button class="theme-toggle" data-theme-toggle title="Toggle theme"><span
+        <button class="nav-wishlist-btn" id="nav-wishlist-btn" title="My Wishlist" onclick="location.href='profile.html#wishlist'" style="display:none">
+                        <i class="fas fa-heart"></i>
+                        <span class="nav-wishlist-count" id="nav-wishlist-count">0</span>
+                    </button>
+                 data-theme-toggle title="Toggle theme"><span
             class="theme-toggle-icon">🌙</span></button>
         <div id="nav-guest" class="flex gap-2">
           <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
@@ -39,6 +43,7 @@
             <a href="profile.html"><i class="fas fa-user"></i> My Profile</a>
             <a href="profile.html"><i class="fas fa-book"></i> My Courses</a>
             <a href="profile.html"><i class="fas fa-award"></i> My Certificates</a>
+            <a href="profile.html#wishlist"><i class="fas fa-heart"></i> My Wishlist</a>
             <hr>
             <button id="nav-logout"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
           </div>
@@ -53,7 +58,8 @@
     <div class="hero-bg-1"></div>
     <div class="hero-bg-2"></div>
     <div class="container">
-      <div class="hero-content animate-fadeInUp">
+      <!-- Guest hero -->
+      <div class="hero-content animate-fadeInUp" id="hero-guest">
         <div class="hero-badge"><i class="fas fa-bolt"></i> The Best Online Learning Platform</div>
         <h1>Take Your Career <span class="text-gradient">To The Next</span><br>Level</h1>
         <p>Learn from expert instructors in web development, data science, design, and marketing.
@@ -79,6 +85,21 @@
             <div class="hero-stat-num">4.8⭐</div>
             <div class="hero-stat-label">Average Rating</div>
           </div>
+        </div>
+      </div>
+      <!-- Logged-in user dashboard hero -->
+      <div class="hero-content animate-fadeInUp hidden" id="hero-user">
+        <div class="hero-badge"><i class="fas fa-hand-wave"></i> Welcome back!</div>
+        <h1>Hello, <span class="text-gradient" id="hero-user-name">Learner</span>! 👋</h1>
+        <p id="hero-user-subtitle">Ready to continue your learning journey? You have enrolled courses waiting for you.</p>
+        <div class="hero-actions">
+          <a href="profile.html" class="btn btn-primary btn-xl"><i class="fas fa-play-circle"></i> Continue Learning</a>
+          <a href="catalog.html" class="btn btn-outline btn-xl"><i class="fas fa-search"></i> Browse Courses</a>
+        </div>
+        <!-- Continue learning strip -->
+        <div id="continue-learning-strip" style="display:none;margin-top:32px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-lg);padding:16px 20px">
+          <div style="font-size:.8rem;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px"><i class="fas fa-history"></i> Continue Where You Left Off</div>
+          <div id="continue-learning-list" style="display:flex;gap:12px;flex-wrap:wrap"></div>
         </div>
       </div>
       <div class="hero-visual">
@@ -155,11 +176,15 @@
   </section>
 
   <!-- RECOMMENDATIONS (only logged in) -->
-  <section id="rec-section" class="hidden">
+  <section id="rec-section" class="hidden" style="background:var(--bg-secondary);padding:80px 0">
     <div class="container">
-      <div class="section-header">
-        <div class="section-label"><i class="fas fa-magic"></i> For You</div>
-        <h2 class="section-title">Recommended Based on Your Interests</h2>
+      <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:40px">
+        <div>
+          <div class="section-label"><i class="fas fa-magic"></i> Personalized</div>
+          <h2 class="section-title">Recommended For You</h2>
+          <p style="font-size:.9rem;color:var(--text-muted);margin-top:4px">Based on your learning history, wishlist, and interests</p>
+        </div>
+        <a href="profile.html#recs" class="btn btn-outline">See All <i class="fas fa-arrow-right"></i></a>
       </div>
       <div class="grid-3" id="rec-grid"></div>
     </div>
@@ -298,8 +323,49 @@
       const user = LHAuth.getCurrentUser();
       const courses = LHData.getAllCourses();
 
+      // ── Hero: personalized vs guest ──────────────────────────────────
+      const heroGuest = document.getElementById('hero-guest');
+      const heroUser  = document.getElementById('hero-user');
+      if (user && heroGuest && heroUser) {
+        heroGuest.classList.add('hidden');
+        heroUser.classList.remove('hidden');
+        const nameEl = document.getElementById('hero-user-name');
+        if (nameEl) nameEl.textContent = user.name.split(' ')[0];
+        const enrolled = LHData.getEnrollments(user.id);
+        const subEl = document.getElementById('hero-user-subtitle');
+        if (subEl) {
+          if (enrolled.length > 0) {
+            subEl.textContent = `You have ${enrolled.length} enrolled course${enrolled.length > 1 ? 's' : ''}. Keep up the great work!`;
+          } else {
+            subEl.textContent = 'Start your learning journey — browse our courses and enroll today!';
+          }
+        }
+        // Continue learning strip
+        if (enrolled.length > 0) {
+          const strip = document.getElementById('continue-learning-strip');
+          const list  = document.getElementById('continue-learning-list');
+          if (strip && list) {
+            strip.style.display = '';
+            const recentEnrolled = enrolled.slice(0, 3).map(cid => LHData.getCourse(cid)).filter(Boolean);
+            list.innerHTML = recentEnrolled.map(c => {
+              const prog = LHData.getProgress(user.id, c.id);
+              const pct  = prog && c.lessons.length ? Math.round(prog.completedLessons.length / c.lessons.length * 100) : 0;
+              return `<a href="player.html?id=${c.id}" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-md);padding:10px 14px;text-decoration:none;color:inherit;flex:1;min-width:180px;max-width:260px;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.14)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
+                <div style="width:38px;height:38px;border-radius:var(--radius-sm);background:${c.gradient};display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">${c.emoji}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.title}</div>
+                  <div style="margin-top:5px;height:4px;background:rgba(255,255,255,.15);border-radius:99px">
+                    <div style="width:${pct}%;height:100%;background:var(--success);border-radius:99px"></div>
+                  </div>
+                  <div style="font-size:.7rem;color:rgba(255,255,255,.5);margin-top:3px">${pct}% complete</div>
+                </div>
+              </a>`;
+            }).join('');
+          }
+        }
+      }
 
-      // Featured courses (top 4 by students)
+      // ── Featured courses (top 4 by students) ───────────────────────
       const featured = [...courses].sort((a, b) => b.students - a.students).slice(0, 4);
       const grid = document.getElementById('featured-grid');
       if (grid) grid.innerHTML = featured.map(c => `
@@ -324,34 +390,45 @@
       </div>
     </div>`).join('');
 
-      // Recommendations
+      // ── Recommendations — FR-15 ─────────────────────────────────────
       const recSection = document.getElementById('rec-section');
       const recGrid = document.getElementById('rec-grid');
-      if (user && user.interests && user.interests.length && recSection && recGrid) {
-        recSection.classList.remove('hidden');
-        const recs = courses.filter(c => user.interests.includes(c.category)).slice(0, 3);
-        recGrid.innerHTML = recs.map(c => `
-      <div class="card course-card" onclick="location.href='course-detail.html?id=${c.id}'" style="cursor:pointer">
-        <div class="course-card-thumb">
-          <div class="course-card-thumb-grad" style="background:${c.gradient}">${c.emoji}</div>
-          <span class="course-card-badge">${c.category}</span>
-        </div>
-        <div class="course-card-body">
-          <div class="course-card-cat">${c.category}</div>
-          <div class="course-card-title">${c.title}</div>
-          <div class="course-card-instructor"><i class="fas fa-user-tie" style="margin-right:4px;opacity:.6"></i>${c.instructor}</div>
-          <div class="rating-row mt-2">
-            <span class="stars">${LHData.starHTML(c.rating)}</span>
-            <span class="rating-val">${c.rating}</span>
+      if (user && recSection && recGrid) {
+        const recs = LHData.getRecommendations(user.id).slice(0, 3);
+        if (recs.length) {
+          recSection.classList.remove('hidden');
+          recGrid.innerHTML = recs.map(c => `
+        <div class="card course-card" onclick="location.href='course-detail.html?id=${c.id}'" style="cursor:pointer">
+          <div class="course-card-thumb">
+            <div class="course-card-thumb-grad" style="background:${c.gradient}">${c.emoji}</div>
+            <span class="course-card-badge">${c.category}</span>
           </div>
-          <div class="course-card-footer">
-            <div class="course-card-price"><span class="old-price">$${c.oldPrice}</span>$${c.price}</div>
+          <div class="course-card-body">
+            <div class="course-card-cat">${c.category}</div>
+            <div class="course-card-title">${c.title}</div>
+            <div class="course-card-instructor"><i class="fas fa-user-tie" style="margin-right:4px;opacity:.6"></i>${c.instructor}</div>
+            <div class="rating-row mt-2">
+              <span class="stars">${LHData.starHTML(c.rating)}</span>
+              <span class="rating-val">${c.rating}</span>
+            </div>
+            <div class="course-card-footer">
+              <div class="course-card-price"><span class="old-price">$${c.oldPrice}</span>$${c.price}</div>
+            </div>
+            ${c._reason ? `<div class="rec-reason-tag"><i class="fas fa-magic"></i> ${c._reason}</div>` : ''}
           </div>
-        </div>
-      </div>`).join('');
+        </div>`).join('');
+        }
+      }
+
+      // ── Nav wishlist badge ──────────────────────────────────────────
+      if (user) {
+        const wlCount = LHData.getWishlist(user.id).length;
+        const wlBadge = document.getElementById('nav-wishlist-count');
+        if (wlBadge && wlCount > 0) { wlBadge.textContent = wlCount; wlBadge.classList.add('show'); }
       }
     });
   </script>
+
 </body>
 
 </html>
