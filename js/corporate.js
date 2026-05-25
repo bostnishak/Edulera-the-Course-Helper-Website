@@ -95,7 +95,7 @@
             } else {
                 recentEl.innerHTML = recent.map(c => `
                     <div class="content-row">
-                        <span class="content-row-emoji">${c.emoji || '🎓'}</span>
+                        <span class="content-row-emoji"><i class="fas ${c.icon || c.emoji || 'fa-graduation-cap'}" style="font-size:1.1rem;color:rgba(255,255,255,0.9)"></i></span>
                         <div class="content-row-info">
                             <div class="content-row-title">${c.title}</div>
                             <div class="content-row-meta">${c.category} • ${fmtDate(c.submittedAt)}</div>
@@ -186,7 +186,7 @@
             whatLearn,
             lessons,
             videoUrl: document.getElementById('up-video-url').value.trim(),
-            emoji: document.getElementById('up-emoji').value.trim() || '🎓',
+            icon: document.getElementById('up-icon').value.trim() || 'fa-graduation-cap',
         };
     }
 
@@ -365,7 +365,7 @@
         container.innerHTML = items.map(item => `
             <div class="content-item-card">
                 <div class="content-item-thumb" style="background:${item.gradient || 'linear-gradient(135deg,#4263eb,#3b82f6)'}">
-                    <span class="content-item-emoji">${item.emoji || '🎓'}</span>
+                    <span class="content-item-emoji"><i class="fas ${item.icon || item.emoji || 'fa-graduation-cap'} course-thumb-icon"></i></span>
                 </div>
                 <div class="content-item-body">
                     <div class="content-item-title">${item.title}</div>

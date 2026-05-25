@@ -12,7 +12,7 @@
         const thumbEl = LHData.qs('detail-thumb');
         if (thumbEl) {
             thumbEl.style.background = course.gradient;
-            thumbEl.textContent = course.emoji;
+            thumbEl.innerHTML = `<i class="fas ${course.icon || course.emoji} course-thumb-icon" style="font-size:3.5rem"></i>`;
             thumbEl.style.fontSize = '5rem';
             thumbEl.style.display = 'flex';
             thumbEl.style.alignItems = 'center';
@@ -26,6 +26,8 @@
         setText('detail-old-price', '$' + course.oldPrice);
         setText('detail-students', course.students.toLocaleString('en') + ' students');
         setText('detail-lessons-count', course.lessons.length + ' lessons');
+        // Dynamic page title (SEO + demo)
+        document.title = `${course.title} — Edulera`;
 
         // Level badge (if available)
         if (course.level) {

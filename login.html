@@ -148,6 +148,9 @@
             </div>
 
             <!-- Demo hints -->
+            <div class="demo-hint" id="hint-user" style="border-left-color:var(--accent-500)">
+                <strong>Demo User:</strong> demo@edulera.com / Demo123!
+            </div>
             <div class="demo-hint green" id="hint-corporate">
                 <strong>Demo Corporate:</strong> corp@techcorp.com / Corp123!
             </div>
@@ -200,6 +203,8 @@
             }
 
             let selectedRole = 'user';
+            // Show user hint by default on page load
+            document.getElementById('hint-user').classList.add('show');
 
             const titles = {
                 user: { title: 'Welcome Back!', subtitle: 'Sign in to your account and continue learning.' },
@@ -216,6 +221,7 @@
                     document.getElementById('login-title').textContent = t.title;
                     document.getElementById('login-subtitle').textContent = t.subtitle;
                     // Show/hide demo hints
+                    document.getElementById('hint-user').classList.toggle('show', selectedRole === 'user');
                     document.getElementById('hint-corporate').classList.toggle('show', selectedRole === 'corporate');
                     document.getElementById('hint-admin').classList.toggle('show', selectedRole === 'admin');
                     // Footer links: only for user

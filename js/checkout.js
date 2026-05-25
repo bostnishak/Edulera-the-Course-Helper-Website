@@ -22,7 +22,7 @@
         setText('order-discount', '-$' + baseDiscount);
 
         const thumbEl = document.getElementById('order-thumb');
-        if (thumbEl) { thumbEl.style.background = course.gradient; thumbEl.textContent = course.emoji; }
+        if (thumbEl) { thumbEl.style.background = course.gradient; thumbEl.innerHTML = `<i class="fas ${course.icon || course.emoji} course-thumb-icon" style="font-size:2.5rem"></i>`; }
 
         // BR-02: Coupon / Discount calculation — 10% off with code "EDULERA10"
         let appliedCoupon = false;

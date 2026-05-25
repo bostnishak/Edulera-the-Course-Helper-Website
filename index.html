@@ -81,7 +81,7 @@
             <div class="hero-stat-label">Expert Instructors</div>
           </div>
           <div class="hero-stat-item">
-            <div class="hero-stat-num">4.8⭐</div>
+            <div class="hero-stat-num">4.8 <i class="fas fa-star" style="color:#f59e0b;font-size:1.4rem"></i></div>
             <div class="hero-stat-label">Average Rating</div>
           </div>
         </div>
@@ -89,7 +89,7 @@
       <!-- Logged-in user dashboard hero -->
       <div class="hero-content animate-fadeInUp hidden" id="hero-user">
         <div class="hero-badge"><i class="fas fa-hand-wave"></i> Welcome back!</div>
-        <h1>Hello, <span class="text-gradient" id="hero-user-name">Learner</span>! 👋</h1>
+        <h1>Hello, <span class="text-gradient" id="hero-user-name">Learner</span>!</h1>
         <p id="hero-user-subtitle">Ready to continue your learning journey? You have enrolled courses waiting for you.</p>
         <div class="hero-actions">
           <a href="profile.html" class="btn btn-primary btn-xl"><i class="fas fa-play-circle"></i> Continue Learning</a>
@@ -103,21 +103,21 @@
       </div>
       <div class="hero-visual">
         <div class="hero-card-float glass animate-float" style="margin-left:40px">
-          <div class="hcf-icon" style="background:var(--success-soft)">🏆</div>
+          <div class="hcf-icon" style="background:var(--success-soft);color:var(--success)"><i class="fas fa-trophy"></i></div>
           <div>
             <div class="hcf-title">Alex earned his certificate!</div>
             <div class="hcf-sub">React.js Course</div>
           </div>
         </div>
         <div class="hero-card-float glass" style="margin-left:80px">
-          <div class="hcf-icon" style="background:var(--accent-soft)">📈</div>
+          <div class="hcf-icon" style="background:var(--accent-soft);color:var(--accent-500)"><i class="fas fa-rocket"></i></div>
           <div>
             <div class="hcf-title">New course added</div>
             <div class="hcf-sub">Flutter Mobile Development</div>
           </div>
         </div>
         <div class="hero-card-float glass" style="margin-left:20px">
-          <div class="hcf-icon" style="background:var(--warning-soft)">⭐</div>
+          <div class="hcf-icon" style="background:var(--warning-soft);color:#f59e0b"><i class="fas fa-star"></i></div>
           <div>
             <div class="hcf-title">Sarah left a review</div>
             <div class="hcf-sub">"An amazing course!"</div>
@@ -136,24 +136,24 @@
       </div>
       <div class="grid-4">
         <a href="catalog.html?cat=Web+Development" class="cat-card">
-          <div class="cat-icon" style="background:var(--info-soft)">💻</div>
+          <div class="cat-icon" style="background:var(--info-soft);color:var(--info)"><i class="fas fa-code"></i></div>
           <h4>Web Development</h4>
-          <span>4 Courses</span>
+          <span id="cat-count-web"></span>
         </a>
         <a href="catalog.html?cat=Data+Science" class="cat-card">
-          <div class="cat-icon" style="background:var(--success-soft)">🐍</div>
+          <div class="cat-icon" style="background:var(--success-soft);color:var(--success)"><i class="fas fa-chart-line"></i></div>
           <h4>Data Science</h4>
-          <span>3 Courses</span>
+          <span id="cat-count-data"></span>
         </a>
         <a href="catalog.html?cat=Design" class="cat-card">
-          <div class="cat-icon" style="background:var(--warning-soft)">🎨</div>
+          <div class="cat-icon" style="background:var(--warning-soft);color:#f59e0b"><i class="fas fa-pencil-ruler"></i></div>
           <h4>Design</h4>
-          <span>2 Courses</span>
+          <span id="cat-count-design"></span>
         </a>
         <a href="catalog.html?cat=Marketing" class="cat-card">
-          <div class="cat-icon" style="background:rgba(219,39,119,0.08)">📈</div>
+          <div class="cat-icon" style="background:rgba(219,39,119,0.08);color:#ec4899"><i class="fas fa-bullhorn"></i></div>
           <h4>Marketing</h4>
-          <span>3 Courses</span>
+          <span id="cat-count-marketing"></span>
         </a>
       </div>
     </div>
@@ -199,22 +199,22 @@
       <div class="grid-3">
         <div style="text-align:center;padding:24px">
           <div
-            style="width:72px;height:72px;border-radius:var(--radius-xl);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 20px">
-            1️⃣</div>
+            style="width:72px;height:72px;border-radius:var(--radius-xl);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+            <i class="fas fa-search" style="font-size:1.6rem;color:var(--accent-500)"></i></div>
           <h3 style="margin-bottom:8px">Choose a Course</h3>
           <p>Browse hundreds of courses and find the one that matches your interests.</p>
         </div>
         <div style="text-align:center;padding:24px">
           <div
-            style="width:72px;height:72px;border-radius:var(--radius-xl);background:var(--success-soft);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 20px">
-            2️⃣</div>
+            style="width:72px;height:72px;border-radius:var(--radius-xl);background:var(--success-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+            <i class="fas fa-credit-card" style="font-size:1.6rem;color:var(--success)"></i></div>
           <h3 style="margin-bottom:8px">Pay &amp; Start</h3>
           <p>Get instant access with a secure payment and watch at your own pace.</p>
         </div>
         <div style="text-align:center;padding:24px">
           <div
-            style="width:72px;height:72px;border-radius:var(--radius-xl);background:var(--warning-soft);display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 20px">
-            3️⃣</div>
+            style="width:72px;height:72px;border-radius:var(--radius-xl);background:var(--warning-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+            <i class="fas fa-certificate" style="font-size:1.6rem;color:#f59e0b"></i></div>
           <h3 style="margin-bottom:8px">Earn Your Certificate</h3>
           <p>Complete the course, pass the quiz, and download your digital certificate.</p>
         </div>
@@ -231,7 +231,7 @@
       </div>
       <div class="grid-3">
         <div class="testimonial-card">
-          <div class="stars mb-4">${'⭐'.repeat(5)}</div>
+          <div class="stars mb-4"><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i></div>
           <div class="testimonial-text">Thanks to Edulera I learned frontend development and landed my first job. The course content is genuinely top-quality!</div>
           <div class="testimonial-author">
             <div class="avatar avatar-sm" style="background:linear-gradient(135deg,var(--accent-600),var(--accent-400))">M</div>
@@ -242,7 +242,7 @@
           </div>
         </div>
         <div class="testimonial-card">
-          <div class="stars mb-4">${'⭐'.repeat(5)}</div>
+          <div class="stars mb-4"><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i></div>
           <div class="testimonial-text">Three months after finishing the data science course I moved into a new position. The certificate was a huge plus in my interviews.</div>
           <div class="testimonial-author">
             <div class="avatar avatar-sm" style="background:linear-gradient(135deg,var(--success),var(--info))">S</div>
@@ -253,7 +253,7 @@
           </div>
         </div>
         <div class="testimonial-card">
-          <div class="stars mb-4">${'⭐'.repeat(5)}</div>
+          <div class="stars mb-4"><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i><i class="fas fa-star" style="color:#f59e0b"></i></div>
           <div class="testimonial-text">I took the Figma course and managed to become a UX designer from scratch. The instructors are truly experienced and engaged.</div>
           <div class="testimonial-author">
             <div class="avatar avatar-sm" style="background:linear-gradient(135deg,var(--warning),var(--danger))">B</div>
@@ -322,6 +322,13 @@
       const user = LHAuth.getCurrentUser();
       const courses = LHData.getAllCourses();
 
+      // ── Dynamic category counts ─────────────────────────────────────
+      const catMap = { web: 'Web Development', data: 'Data Science', design: 'Design', marketing: 'Marketing' };
+      Object.entries(catMap).forEach(([key, cat]) => {
+        const el = document.getElementById(`cat-count-${key}`);
+        if (el) el.textContent = courses.filter(c => c.category === cat).length + ' Courses';
+      });
+
       // ── Hero: personalized vs guest ──────────────────────────────────
       const heroGuest = document.getElementById('hero-guest');
       const heroUser  = document.getElementById('hero-user');
@@ -350,7 +357,7 @@
               const prog = LHData.getProgress(user.id, c.id);
               const pct  = prog && c.lessons.length ? Math.round(prog.completedLessons.length / c.lessons.length * 100) : 0;
               return `<a href="player.html?id=${c.id}" style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:var(--radius-md);padding:10px 14px;text-decoration:none;color:inherit;flex:1;min-width:180px;max-width:260px;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.14)'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
-                <div style="width:38px;height:38px;border-radius:var(--radius-sm);background:${c.gradient};display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">${c.emoji}</div>
+                <div style="width:38px;height:38px;border-radius:var(--radius-sm);background:${c.gradient};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas ${c.icon || c.emoji} course-thumb-icon" style="font-size:1rem"></i></div>
                 <div style="flex:1;min-width:0">
                   <div style="font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.title}</div>
                   <div style="margin-top:5px;height:4px;background:rgba(255,255,255,.15);border-radius:99px">
@@ -370,7 +377,7 @@
       if (grid) grid.innerHTML = featured.map(c => `
     <div class="card course-card" onclick="location.href='course-detail.html?id=${c.id}'" style="cursor:pointer">
       <div class="course-card-thumb">
-        <div class="course-card-thumb-grad" style="background:${c.gradient}">${c.emoji}</div>
+        <div class="course-card-thumb-grad" style="background:${c.gradient}"><i class="fas ${c.icon || c.emoji} course-thumb-icon"></i></div>
         <span class="course-card-badge">${c.category}</span>
       </div>
       <div class="course-card-body">
@@ -399,7 +406,7 @@
           recGrid.innerHTML = recs.map(c => `
         <div class="card course-card" onclick="location.href='course-detail.html?id=${c.id}'" style="cursor:pointer">
           <div class="course-card-thumb">
-            <div class="course-card-thumb-grad" style="background:${c.gradient}">${c.emoji}</div>
+            <div class="course-card-thumb-grad" style="background:${c.gradient}"><i class="fas ${c.icon || c.emoji} course-thumb-icon"></i></div>
             <span class="course-card-badge">${c.category}</span>
           </div>
           <div class="course-card-body">

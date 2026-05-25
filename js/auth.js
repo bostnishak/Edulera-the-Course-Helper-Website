@@ -5,7 +5,7 @@
 
     /* ---- Version-based full reset ---- */
     /* Change SEED_VERSION to force-wipe all localStorage and re-seed fresh accounts */
-    const SEED_VERSION = 'v3';
+    const SEED_VERSION = 'v5';
     if (localStorage.getItem('lh_seed_version') !== SEED_VERSION) {
         // Clear all Edulera data
         const keysToRemove = [];
@@ -42,7 +42,8 @@
                 password: 'Demo123!',
                 role: 'user',
                 interests: ['Web Development', 'Design'],
-                bio: 'Edulera demo kullanıcısı',
+                bio: 'Edulera demo kullanıcısı — online öğrenmeye hevesli bir yazılım geliştiricisi.',
+                job: 'Junior Developer',
                 createdAt: '2026-01-01T10:00:00Z'
             },
             /* 🏢 Kurumsal Hesap */
@@ -75,6 +76,122 @@
             if (!users.find(u => u.id === s.id)) { users.push(s); changed = true; }
         });
         if (changed) saveUsers(users);
+
+        /* ── Demo kullanıcısı için mock veri seed (FR-05/07/12/13) ── */
+        seedDemoUserData();
+    }
+
+    /* Demo kullanıcısına gerçekçi mock veriler seed eder.
+       Yalnızca ilk kez çalışır (lh_demo_seeded kontrolü). */
+    function seedDemoUserData() {
+        if (localStorage.getItem('lh_demo_seeded') === 'v2') return;
+
+        const uid = 'demo_user_001';
+
+        /* FR-05: 3 kursa kayıt */
+        const enrollments = JSON.parse(localStorage.getItem('lh_enrollments') || '{}');
+        enrollments[uid] = ['c1', 'c5', 'c7'];
+        localStorage.setItem('lh_enrollments', JSON.stringify(enrollments));
+
+        /* İlerleme — c1: %62, c5: %43, c7: %100 tamamlandı */
+        const progress = JSON.parse(localStorage.getItem('lh_progress') || '{}');
+        if (!progress[uid]) progress[uid] = {};
+        progress[uid]['c1'] = { completedLessons: ['l1','l2','l3','l4','l5'], quizPassed: false, quizScore: null, certEarned: false };
+        progress[uid]['c5'] = { completedLessons: ['l1','l2','l3'], quizPassed: false, quizScore: null, certEarned: false };
+        progress[uid]['c7'] = { completedLessons: ['l1','l2','l3','l4','l5','l6','l7','l8'], quizPassed: true, quizScore: 85, certEarned: true };
+        localStorage.setItem('lh_progress', JSON.stringify(progress));
+
+        /* Sertifika — c7 tamamlandı (achievement) */
+        const certs = JSON.parse(localStorage.getItem('lh_certs') || '[]');
+        const certExists = certs.find(c => c.userId === uid && c.courseId === 'c7');
+        if (!certExists) {
+            certs.push({
+                id: 'cert_demo_001',
+                userId: uid,
+                courseId: 'c7',
+                courseName: 'Digital Marketing & SEO Mastery',
+                type: 'achievement',
+                score: 85,
+                date: '2026-03-15T14:30:00Z'
+            });
+            localStorage.setItem('lh_certs', JSON.stringify(certs));
+        }
+
+        /* FR-07: Sipariş geçmişi — 3 sipariş */
+        const orders = JSON.parse(localStorage.getItem('lh_orders') || '{}');
+        orders[uid] = [
+            {
+                id: 'ord_demo_001',
+                courseId: 'c1',
+                courseName: 'Modern Web Development: HTML, CSS & JavaScript',
+                courseIcon: 'fa-code',
+                courseGradient: 'linear-gradient(135deg,#4263eb,#3b82f6)',
+                amount: 269.10,
+                date: '2026-01-20T11:00:00Z',
+                status: 'completed'
+            },
+            {
+                id: 'ord_demo_002',
+                courseId: 'c5',
+                courseName: 'UI/UX Design: Professional Interfaces with Figma',
+                courseIcon: 'fa-pencil-ruler',
+                courseGradient: 'linear-gradient(135deg,#f59e0b,#ef4444)',
+                amount: 314.10,
+                date: '2026-02-10T09:30:00Z',
+                status: 'completed'
+            },
+            {
+                id: 'ord_demo_003',
+                courseId: 'c7',
+                courseName: 'Digital Marketing & SEO Mastery',
+                courseIcon: 'fa-bullhorn',
+                courseGradient: 'linear-gradient(135deg,#10b981,#f59e0b)',
+                amount: 299,
+                date: '2026-03-01T16:00:00Z',
+                status: 'completed'
+            }
+        ];
+        localStorage.setItem('lh_orders', JSON.stringify(orders));
+
+        /* FR-12: Bildirimler — 2 okunmamış */
+        const notifs = JSON.parse(localStorage.getItem('lh_notifications') || '{}');
+        notifs[uid] = [
+            {
+                id: 'notif_demo_001',
+                type: 'success',
+                title: '🎉 Certificate Earned!',
+                message: 'You passed the Digital Marketing & SEO Mastery quiz with 85%! Your certificate is ready.',
+                link: 'certificate.html?id=cert_demo_001',
+                read: false,
+                date: '2026-03-15T14:35:00Z'
+            },
+            {
+                id: 'notif_demo_002',
+                type: 'info',
+                title: '📚 New Course Recommendation',
+                message: 'Based on your interests, we recommend "Graphic Design: Adobe Photoshop & Illustrator".',
+                link: 'course-detail.html?id=c6',
+                read: false,
+                date: '2026-03-20T10:00:00Z'
+            },
+            {
+                id: 'notif_demo_003',
+                type: 'warning',
+                title: '⏰ Continue Your Course',
+                message: 'You are 62% through Modern Web Development. Don\'t lose your momentum — keep going!',
+                link: 'player.html?id=c1',
+                read: true,
+                date: '2026-03-18T08:00:00Z'
+            }
+        ];
+        localStorage.setItem('lh_notifications', JSON.stringify(notifs));
+
+        /* FR-13: Wishlist — 2 kurs */
+        const wishlist = JSON.parse(localStorage.getItem('lh_wishlist') || '{}');
+        wishlist[uid] = ['c2', 'c9'];
+        localStorage.setItem('lh_wishlist', JSON.stringify(wishlist));
+
+        localStorage.setItem('lh_demo_seeded', 'v2');
     }
 
     function register(data) {

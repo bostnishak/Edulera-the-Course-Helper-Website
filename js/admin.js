@@ -127,7 +127,7 @@
             } else {
                 previewEl.innerHTML = pend.map(c => `
                     <div class="content-row">
-                        <span class="content-row-emoji">${c.emoji || '🎓'}</span>
+                        <span class="content-row-emoji"><i class="fas ${c.icon || c.emoji || 'fa-graduation-cap'}" style="font-size:1.1rem;color:rgba(255,255,255,0.9)"></i></span>
                         <div class="content-row-info">
                             <div class="content-row-title">${c.title}</div>
                             <div class="content-row-meta">${c.corporateName} • ${c.category}</div>
@@ -176,7 +176,7 @@
         container.innerHTML = items.map(item => `
             <div class="approval-card" data-id="${item.id}">
                 <div class="approval-card-thumb" style="background:${item.gradient || 'linear-gradient(135deg,#6c2bff,#3b82f6)'}">
-                    <span>${item.emoji || '🎓'}</span>
+                    <span><i class="fas ${item.icon || item.emoji || 'fa-graduation-cap'} course-thumb-icon"></i></span>
                 </div>
                 <div class="approval-card-body">
                     <div class="approval-card-header">
@@ -265,7 +265,7 @@
             <tr>
                 <td>
                     <div class="table-course-cell">
-                        <div class="table-course-thumb" style="background:${c.gradient || 'linear-gradient(135deg,#6c2bff,#3b82f6)'}">${c.emoji || '🎓'}</div>
+                        <div class="table-course-thumb" style="background:${c.gradient || 'linear-gradient(135deg,#6c2bff,#3b82f6)'}"><i class="fas ${c.icon || c.emoji || 'fa-graduation-cap'} course-thumb-icon"></i></div>
                         <div>
                             <div class="table-course-title">${c.title}</div>
                             <div class="table-course-sub">${c.lessons ? c.lessons.length : 0} lessons</div>

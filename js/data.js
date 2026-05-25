@@ -5,7 +5,7 @@
             id: 'c1', title: 'Modern Web Development: HTML, CSS & JavaScript', category: 'Web Development',
             instructor: 'Ahmet Yilmaz', price: 299, oldPrice: 599,
             rating: 4.8, ratingCount: 2341, students: 8921,
-            emoji: '💻', gradient: 'linear-gradient(135deg,#4263eb,#3b82f6)',
+            icon: 'fa-code', gradient: 'linear-gradient(135deg,#4263eb,#3b82f6)',
             description: 'Learn modern web technologies from scratch. Covers everything from the fundamentals of HTML5, CSS3, and JavaScript to advanced topics.',
             whatLearn: ['Using HTML5 semantic structure', 'Responsive design with CSS Grid and Flexbox', 'Modern JavaScript ES6+ syntax', 'DOM manipulation and API integration', 'Building real-world projects'],
             lessons: [
@@ -35,7 +35,7 @@
             id: 'c2', title: 'Modern Frontend Development with React.js', category: 'Web Development',
             instructor: 'Zeynep Kara', price: 399, oldPrice: 799,
             rating: 4.9, ratingCount: 1876, students: 6543,
-            emoji: '⚛️', gradient: 'linear-gradient(135deg,#06b6d4,#3b82f6)',
+            icon: 'fa-atom', gradient: 'linear-gradient(135deg,#06b6d4,#3b82f6)',
             description: 'Build component-based modern web applications with React.js. Learn Hooks, Context API, Redux, and more.',
             whatLearn: ['React component architecture', 'useState and useEffect hooks', 'State management with Context API', 'Building SPAs with React Router', 'API integration and async operations'],
             lessons: [
@@ -64,7 +64,7 @@
             id: 'c3', title: 'Data Science & Machine Learning with Python', category: 'Data Science',
             instructor: 'Dr. Mehmet Sahin', price: 449, oldPrice: 899,
             rating: 4.7, ratingCount: 3102, students: 12341,
-            emoji: '🐍', gradient: 'linear-gradient(135deg,#10b981,#3b82f6)',
+            icon: 'fa-chart-line', gradient: 'linear-gradient(135deg,#10b981,#3b82f6)',
             description: 'Learn to develop data analysis, visualization, and machine learning models using Python.',
             whatLearn: ['Python programming fundamentals', 'Data analysis with NumPy and Pandas', 'Visualization with Matplotlib and Seaborn', 'ML models with Scikit-learn', 'Working with real datasets'],
             lessons: [
@@ -93,7 +93,7 @@
             id: 'c4', title: 'Deep Learning and Artificial Intelligence', category: 'Data Science',
             instructor: 'Prof. Elif Demir', price: 499, oldPrice: 999,
             rating: 4.6, ratingCount: 987, students: 4231,
-            emoji: '🤖', gradient: 'linear-gradient(135deg,#8b5cf6,#6366f1)',
+            icon: 'fa-brain', gradient: 'linear-gradient(135deg,#8b5cf6,#6366f1)',
             description: 'Design and implement neural networks and deep learning models using TensorFlow and Keras.',
             whatLearn: ['Fundamentals of artificial neural networks', 'Using TensorFlow and Keras', 'Image classification with CNN', 'Time series analysis with RNN', 'Transfer learning techniques'],
             lessons: [
@@ -121,7 +121,7 @@
             id: 'c5', title: 'UI/UX Design: Professional Interfaces with Figma', category: 'Design',
             instructor: 'Selin Arslan', price: 349, oldPrice: 699,
             rating: 4.9, ratingCount: 2109, students: 9876,
-            emoji: '🎨', gradient: 'linear-gradient(135deg,#f59e0b,#ef4444)',
+            icon: 'fa-pencil-ruler', gradient: 'linear-gradient(135deg,#f59e0b,#ef4444)',
             description: 'Design professional user interfaces and experiences using Figma. Learn the full process from wireframe to prototype.',
             whatLearn: ['Mastering all Figma tools', 'Creating wireframes and mockups', 'Designing components and design systems', 'Building prototypes and animations', 'User research and testing'],
             lessons: [
@@ -150,7 +150,7 @@
             id: 'c6', title: 'Graphic Design: Adobe Photoshop & Illustrator', category: 'Design',
             instructor: 'Can Ozturk', price: 399, oldPrice: 799,
             rating: 4.7, ratingCount: 1543, students: 7234,
-            emoji: '🖼️', gradient: 'linear-gradient(135deg,#ec4899,#f59e0b)',
+            icon: 'fa-layer-group', gradient: 'linear-gradient(135deg,#ec4899,#f59e0b)',
             description: 'Create professional graphic designs using Adobe Photoshop and Illustrator. Learn logo, poster, and digital content creation.',
             whatLearn: ['Photo editing with Photoshop', 'Creating vector graphics', 'Designing logos and brand identities', 'Differences between print and digital design', 'Color theory and typography'],
             lessons: [
@@ -178,7 +178,7 @@
             id: 'c7', title: 'Digital Marketing & SEO Mastery', category: 'Marketing',
             instructor: 'Ayse Koc', price: 299, oldPrice: 599,
             rating: 4.8, ratingCount: 2876, students: 14532,
-            emoji: '📈', gradient: 'linear-gradient(135deg,#10b981,#f59e0b)',
+            icon: 'fa-bullhorn', gradient: 'linear-gradient(135deg,#10b981,#f59e0b)',
             description: 'Learn all digital marketing channels: SEO, social media, content marketing, email, and Google Ads.',
             whatLearn: ['SEO fundamentals and advanced techniques', 'Using Google Analytics', 'Social media strategies', 'Email marketing', 'Managing Google and Meta Ads'],
             lessons: [
@@ -208,7 +208,7 @@
             id: 'c8', title: 'E-Commerce & Dropshipping Profits', category: 'Marketing',
             instructor: 'Burak Yildiz', price: 249, oldPrice: 499,
             rating: 4.5, ratingCount: 1234, students: 8765,
-            emoji: '🛒', gradient: 'linear-gradient(135deg,#f59e0b,#4263eb)',
+            icon: 'fa-store', gradient: 'linear-gradient(135deg,#f59e0b,#4263eb)',
             description: 'Learn the secrets of setting up an e-commerce site, selecting products, the dropshipping model, and succeeding in online sales.',
             whatLearn: ['E-commerce business models', 'Setting up a store with Shopify', 'Product research and selection', 'How dropshipping works', 'Profit calculation and pricing'],
             lessons: [
@@ -237,7 +237,7 @@
             id: 'c9', title: 'Backend Development with Node.js and Express', category: 'Web Development',
             instructor: 'Emre Celik', price: 399, oldPrice: 799,
             rating: 4.7, ratingCount: 1654, students: 7123,
-            emoji: '🟩', gradient: 'linear-gradient(135deg,#10b981,#4263eb)',
+            icon: 'fa-server', gradient: 'linear-gradient(135deg,#10b981,#4263eb)',
             description: 'Build powerful REST APIs and backend systems using Node.js and the Express framework.',
             whatLearn: ['Node.js fundamentals', 'REST API with Express.js', 'MongoDB and Mongoose', 'Authentication with JWT', 'Deployment and hosting'],
             lessons: [
@@ -266,7 +266,7 @@
             id: 'c10', title: 'Business Intelligence & Data Visualization with Power BI', category: 'Data Science',
             instructor: 'Fatma Yildirim', price: 349, oldPrice: 699,
             rating: 4.6, ratingCount: 876, students: 4512,
-            emoji: '📊', gradient: 'linear-gradient(135deg,#f59e0b,#10b981)',
+            icon: 'fa-chart-bar', gradient: 'linear-gradient(135deg,#f59e0b,#10b981)',
             description: 'Analyze business data and create interactive reports and dashboards using Power BI.',
             whatLearn: ['Using Power BI Desktop', 'Writing DAX formulas', 'Data modeling', 'Interactive dashboard design', 'Publishing with Power BI Service'],
             lessons: [
@@ -295,7 +295,7 @@
             id: 'c11', title: 'Mobile App Development with Flutter', category: 'Web Development',
             instructor: 'Ozan Gunes', price: 449, oldPrice: 899,
             rating: 4.8, ratingCount: 1432, students: 6789,
-            emoji: '📱', gradient: 'linear-gradient(135deg,#06b6d4,#10b981)',
+            icon: 'fa-mobile-alt', gradient: 'linear-gradient(135deg,#06b6d4,#10b981)',
             description: 'Develop cross-platform mobile applications for iOS and Android with Flutter and Dart.',
             whatLearn: ['Dart programming language', 'Flutter widget system', 'State management', 'Firebase integration', 'Publishing to App Store and Google Play'],
             lessons: [
@@ -324,7 +324,7 @@
             id: 'c12', title: 'Brand & Social Media Communications', category: 'Marketing',
             instructor: 'Nihan Polat', price: 199, oldPrice: 399,
             rating: 4.5, ratingCount: 2341, students: 11234,
-            emoji: '📣', gradient: 'linear-gradient(135deg,#ec4899,#f59e0b)',
+            icon: 'fa-hashtag', gradient: 'linear-gradient(135deg,#ec4899,#f59e0b)',
             description: 'Build a strong brand identity and manage social media professionally. Content strategy and community management.',
             whatLearn: ['Building a brand identity', 'Creating a content calendar', 'Instagram and TikTok strategy', 'Influencer collaborations', 'Analytics and reporting'],
             lessons: [
@@ -433,7 +433,7 @@
                 rating: 0,
                 ratingCount: 0,
                 students: 0,
-                emoji: item.emoji || '🎓',
+                icon: item.icon || item.emoji || 'fa-graduation-cap',
                 gradient: item.gradient || 'linear-gradient(135deg,#4263eb,#3b82f6)',
                 description: item.description || '',
                 whatLearn: item.whatLearn || [],
@@ -603,7 +603,7 @@
             id: 'ord_' + Date.now() + Math.random().toString(36).slice(2, 6),
             courseId,
             courseName: course ? course.title : courseId,
-            courseEmoji: course ? course.emoji : '🎓',
+            courseIcon: course ? (course.icon || course.emoji) : 'fa-graduation-cap',
             courseGradient: course ? course.gradient : 'linear-gradient(135deg,#4263eb,#3b82f6)',
             amount,
             date: new Date().toISOString(),

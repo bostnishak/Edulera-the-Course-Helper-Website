@@ -28,7 +28,7 @@
             const wishlisted = user && LHData.isWishlisted(user.id, c.id);
             return `<div class="card course-card" style="cursor:pointer;position:relative" id="card-${c.id}">
         <div class="course-card-thumb" onclick="location.href='course-detail.html?id=${c.id}'">
-          <div class="course-card-thumb-grad" style="background:${c.gradient}">${c.emoji}</div>
+          <div class="course-card-thumb-grad" style="background:${c.gradient}"><i class="fas ${c.icon || c.emoji} course-thumb-icon"></i></div>
           <span class="course-card-badge">${c.category}</span>
           ${enrolled ? '<span class="course-card-badge" style="left:auto;right:12px;background:var(--success)">Enrolled</span>' : ''}
         </div>

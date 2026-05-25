@@ -74,7 +74,7 @@
                         const prog = LHData.getProgress(user.id, cid);
                         const pct = Math.round((prog.completedLessons.length / c.lessons.length) * 100);
                         return `<div class="enrolled-course-row" onclick="location.href='player.html?id=${cid}'">
-                            <div class="enrolled-thumb" style="background:${c.gradient}">${c.emoji}</div>
+                            <div class="enrolled-thumb" style="background:${c.gradient}"><i class="fas ${c.icon || c.emoji} course-thumb-icon"></i></div>
                             <div class="enrolled-info">
                                 <div class="enrolled-title">${c.title}</div>
                                 <div class="enrolled-progress-row">
@@ -122,7 +122,7 @@
                 const allDone = prog.completedLessons.length === c.lessons.length;
                 return `<div class="settings-section" style="padding:20px">
                     <div class="enrolled-course-row" style="cursor:default;background:none;padding:0;margin-bottom:16px" >
-                        <div class="enrolled-thumb" style="background:${c.gradient};width:72px;height:56px;font-size:1.6rem">${c.emoji}</div>
+                        <div class="enrolled-thumb" style="background:${c.gradient};width:72px;height:56px;font-size:1.6rem"><i class="fas ${c.icon || c.emoji} course-thumb-icon"></i></div>
                         <div class="enrolled-info">
                             <div class="enrolled-title" style="font-size:1rem">${c.title}</div>
                             <div style="font-size:.82rem;color:var(--text-muted);margin-bottom:6px"><i class="fas fa-user-tie" style="margin-right:4px"></i>${c.instructor} &nbsp;•&nbsp; <span class="badge badge-${prog.quizPassed ? 'success' : 'accent'}">${prog.quizPassed ? 'Quiz Passed' : allDone ? 'Lessons Done' : 'In Progress'}</span></div>
@@ -146,7 +146,7 @@
         function certRowHTML(cert) {
             const isAchiev = cert.type === 'achievement';
             return `<div class="cert-row" onclick="location.href='certificate.html?id=${cert.id}'">
-                <div class="cert-row-icon ${isAchiev ? 'cert-achievement-icon' : 'cert-participation-icon'}">${isAchiev ? '🏆' : '📜'}</div>
+                <div class="cert-row-icon ${isAchiev ? 'cert-achievement-icon' : 'cert-participation-icon'}"><i class="fas ${isAchiev ? 'fa-trophy' : 'fa-scroll'} course-thumb-icon"></i></div>
                 <div class="cert-row-info">
                     <div class="cert-row-type" style="color:${isAchiev ? '#f59e0b' : 'var(--accent)'}">${isAchiev ? 'Certificate of Achievement' : 'Certificate of Completion'}</div>
                     <div class="cert-row-course">${cert.courseName}</div>
@@ -187,7 +187,7 @@
             listEl.innerHTML = orders.map(ord => `
                 <div class="settings-section" style="padding:20px;margin-bottom:16px">
                     <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-                        <div style="width:60px;height:48px;border-radius:var(--radius-md);background:${ord.courseGradient};display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">${ord.courseEmoji}</div>
+                        <div style="width:60px;height:48px;border-radius:var(--radius-md);background:${ord.courseGradient};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fas ${ord.courseIcon || ord.courseEmoji || 'fa-graduation-cap'} course-thumb-icon" style="font-size:1.4rem"></i></div>
                         <div style="flex:1;min-width:0">
                             <div style="font-weight:700;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${ord.courseName}</div>
                             <div style="font-size:.8rem;color:var(--text-muted);margin-top:2px"><i class="fas fa-calendar-alt" style="margin-right:4px"></i>${new Date(ord.date).toLocaleDateString('en-US', { day:'2-digit', month:'short', year:'numeric' })}</div>
@@ -239,7 +239,7 @@
                 const enrolled = LHData.isEnrolled(user.id, cid);
                 return `<div class="card course-card" style="position:relative">
                     <div class="course-card-thumb" onclick="location.href='course-detail.html?id=${cid}'" style="cursor:pointer">
-                        <div class="course-card-thumb-grad" style="background:${c.gradient}">${c.emoji}</div>
+                        <div class="course-card-thumb-grad" style="background:${c.gradient}"><i class="fas ${c.icon || c.emoji} course-thumb-icon"></i></div>
                         <span class="course-card-badge">${c.category}</span>
                     </div>
                     <div class="course-card-body">
@@ -289,7 +289,7 @@
             recsEl.innerHTML = recs.map(c => `
                 <div class="card course-card" onclick="location.href='course-detail.html?id=${c.id}'" style="cursor:pointer;position:relative">
                     <div class="course-card-thumb">
-                        <div class="course-card-thumb-grad" style="background:${c.gradient}">${c.emoji}</div>
+                        <div class="course-card-thumb-grad" style="background:${c.gradient}"><i class="fas ${c.icon || c.emoji} course-thumb-icon"></i></div>
                         <span class="course-card-badge">${c.category}</span>
                     </div>
                     <div class="course-card-body">
@@ -405,6 +405,14 @@
                 LHAuth.updateUser({ name, bio, job });
                 user = LHAuth.getCurrentUser();
                 renderSidebar();
+                // FR-11 + FR-12: Profil güncelleme bildirimi
+                LHData.addNotification(user.id, {
+                    type: 'success',
+                    title: '✅ Profile Updated',
+                    message: `Your profile has been successfully updated. Name: "${name}"`,
+                    link: null
+                });
+                updateNotifBadge();
                 LHData.toast('Profile updated! ✅', 'success');
             });
         }

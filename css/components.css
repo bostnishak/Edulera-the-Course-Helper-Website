@@ -502,7 +502,67 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Premium Vignette Glow Overlay (Keeps colors vibrant in center) */
+.course-card-thumb-grad::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Center is 100% transparent (vibrant), edges fade into the dark card color */
+    background: radial-gradient(circle at center, transparent 10%, var(--bg-card) 90%);
+    z-index: 1;
+    transition: background 0.4s ease;
+}
+
+/* Subtle tech grid pattern */
+.course-card-thumb-grad::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(var(--text-primary) 1px, transparent 1px);
+    background-size: 18px 18px;
+    opacity: 0.12;
+    z-index: 2;
+}
+
+/* Hover glow expansion effect */
+.course-card:hover .course-card-thumb-grad::before {
+    background: radial-gradient(circle at center, transparent 25%, var(--bg-card) 95%);
+}
+
+/* General fallback for icons outside main cards */
+.course-thumb-icon {
+    color: rgba(255, 255, 255, 0.95);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* Specific Glassmorphism container for main course cards */
+.course-card-thumb-grad .course-thumb-icon {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-xl);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    font-size: 1.8rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    filter: none;
+}
+
+.course-card:hover .course-card-thumb-grad .course-thumb-icon {
+    transform: scale(1.15) translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
 }
 
 .course-card-badge {
@@ -517,6 +577,7 @@ footer {
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    z-index: 10;
 }
 
 .course-card-body {
@@ -1013,13 +1074,17 @@ footer {
 }
 
 .cat-icon {
-    font-size: 2rem;
+    font-size: 1.4rem;
     width: 60px;
     height: 60px;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.cat-icon i {
+    font-size: 1.5rem;
 }
 
 .cat-card h4 {
